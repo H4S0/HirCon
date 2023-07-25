@@ -1,0 +1,12 @@
+Broj ucenika u dnevniku: 2
+Ime i prezime ucenika: Hasan
+Ocjena iz programiranja: 5
+Ocjena iz matematike: 3
+Prosjek ocjena: 4
+---------------------------------
+Broj ucenika u dnevniku: 2
+Ime i prezime ucenika: Hasan
+Ocjena iz programiranja: 1
+Ocjena iz matematike: 2
+Prosjek ocjena: 1.5
+---------------------------------
