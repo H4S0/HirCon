@@ -11,6 +11,7 @@
     foreach ($datoteka as $red) {
         echo $red . "<br>";
     }dsada
+sdadasda
     ?>
 </body>
 </html>
