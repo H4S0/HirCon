@@ -9,7 +9,8 @@
     <?php
     $datoteka = file("ocj.txt"); // Čitanje svih redova iz datoteke
     foreach ($datoteka as $red) {
-        echo $red . "<br>";
+        echo $red . "<br>";fsafas
+        
     }dsada
 sdadasda
     ?>dsadad
