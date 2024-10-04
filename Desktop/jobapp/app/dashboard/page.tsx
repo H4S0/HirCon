@@ -4,7 +4,7 @@ import React from 'react';
 const page = () => {
   return (
     <div>
-      page <LogoutLink>Logout</LogoutLink>
+      imeee <LogoutLink>Logout</LogoutLink>
     </div>
   );
 };
