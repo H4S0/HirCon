@@ -1,19 +1,12 @@
-import { Button } from '@/components/ui/button';
-import {
-  LoginLink,
-  RegisterLink,
-} from '@kinde-oss/kinde-auth-nextjs/components';
 import React from 'react';
+import Hero from './components/landingpage/Hero';
 
 export default function Home() {
   return (
     <>
-      <RegisterLink>
-        <Button>Register</Button>
-      </RegisterLink>
-      <LoginLink>
-        <Button>Login</Button>
-      </LoginLink>
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-24">
+        <Hero />
+      </div>
     </>
   );
 }
