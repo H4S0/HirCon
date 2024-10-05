@@ -31,7 +31,7 @@ export async function GET() {
         },
       });
     }
-    return NextResponse.redirect('http://localhost:3000/dashboard');
+    return NextResponse.redirect('http://localhost:3000');
   } catch (error) {
     console.error('Error:', error);
     return NextResponse.json(
