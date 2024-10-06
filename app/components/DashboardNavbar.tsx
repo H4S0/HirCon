@@ -13,8 +13,8 @@ const DashboardNavbar = () => {
         <Link href="/dashboard">Dashboard</Link>
       </div>
       <div className="flex gap-6">
-        <Link href="/profileEditing">Profile</Link>
-        <Link href="/company">Company</Link>
+        <Link href="/dashboard/profileediting">Profile</Link>
+        <Link href="/dashboard/companyediting">Company</Link>
       </div>
     </div>
   );
