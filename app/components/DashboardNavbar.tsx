@@ -14,7 +14,7 @@ const DashboardNavbar = () => {
       </div>
       <div className="flex gap-6">
         <Link href="/dashboard/profileediting">Profile</Link>
-        <Link href="/dashboard/companyediting">Company</Link>
+        <Link href="/dashboard/company">Company</Link>
       </div>
     </div>
   );
