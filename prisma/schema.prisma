@@ -23,3 +23,23 @@ model User {
 
   createdAt DateTime @default(now())
 }
+
+model Profile {
+  id            String   @id @default(auto()) @map("_id") @db.ObjectId
+  description   String
+  currentStatus Status   @default(UNEMPLOYED) // options: "opentowork", "employed", "unemployed"
+  skills        String[] // Array of skills
+  education     Json? // Use Json type to store array of objects
+  experience    Json? // Use Json type to store array of objects
+
+  user   User   @relation(name: "UserProfile", fields: [userId], references: [id])
+  userId String @unique @db.ObjectId
+
+  createdAt DateTime @default(now())
+}
+
+enum Status {
+  UNEMPLOYED
+  EMPLOYED
+  OPENTOWORK
+}
