@@ -1,9 +1,10 @@
+'use client';
+
 import React, { useActionState } from 'react';
 import { useForm } from '@conform-to/react';
 import { profileSchema } from '@/app/utils/zodSchemas';
 import { parseWithZod } from '@conform-to/zod';
-import Link from 'next/link';
-import { UpdateProfile } from '@/app/actions/UpdateProfile';
+import { UpdateProfile } from '@/app/actions';
 import {
   Card,
   CardContent,
@@ -12,10 +13,16 @@ import {
   CardTitle,
 } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
-import { Select, SelectItem, SelectValue } from '@/components/ui/select';
-import { SelectContent, SelectTrigger } from '@radix-ui/react-select';
+import {
+  Select,
+  SelectItem,
+  SelectValue,
+  SelectContent,
+  SelectTrigger,
+} from '@/components/ui/select';
+import { Input } from '@/components/ui/input';
 
-const page = () => {
+const ProfileUpdating = () => {
   const [lastResult, action] = useActionState(UpdateProfile, undefined);
   const [form, fields] = useForm({
     lastResult,
@@ -47,11 +54,23 @@ const page = () => {
                     <SelectValue>test</SelectValue>
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem>Open To Work</SelectItem>
-                    <SelectItem>Unemployed</SelectItem>
-                    <SelectItem>Employed</SelectItem>
+                    <SelectItem value="opentowork">Open To Work</SelectItem>
+                    <SelectItem value="opentowork">Unemployed</SelectItem>
+                    <SelectItem value="opentowork">Employed</SelectItem>
                   </SelectContent>
                 </Select>
+              </div>
+              <div className="grid gap-3">
+                <Label>Description</Label>
+                <Input
+                  key={fields.description.key}
+                  name={fields.description.name}
+                  defaultValue={fields.description.initialValue}
+                  placeholder="Decribe your self"
+                />
+                <p className="text-red-500 text-sm">
+                  {fields.description.errors}
+                </p>
               </div>
             </div>
           </CardContent>
@@ -61,4 +80,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default ProfileUpdating;
