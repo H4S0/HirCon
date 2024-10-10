@@ -9,6 +9,7 @@ import {
   Card,
   CardContent,
   CardDescription,
+  CardFooter,
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
@@ -21,6 +22,7 @@ import {
   SelectTrigger,
 } from '@/components/ui/select';
 import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
 
 const ProfileUpdating = () => {
   const [lastResult, action] = useActionState(UpdateProfile, undefined);
@@ -74,6 +76,9 @@ const ProfileUpdating = () => {
               </div>
             </div>
           </CardContent>
+          <CardFooter>
+            <Button>Submit</Button>
+          </CardFooter>
         </form>
       </Card>
     </div>
