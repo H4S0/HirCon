@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useActionState } from 'react';
+import React, { useActionState, useState } from 'react';
 import { useForm } from '@conform-to/react';
 import { profileSchema } from '@/app/utils/zodSchemas';
 import { parseWithZod } from '@conform-to/zod';
@@ -14,17 +14,12 @@ import {
   CardTitle,
 } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
-import {
-  Select,
-  SelectItem,
-  SelectValue,
-  SelectContent,
-  SelectTrigger,
-} from '@/components/ui/select';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 
 const ProfileUpdating = () => {
+  const [skills, setSkills] = useState<string[]>([]);
+  const [inputSkill, setInputSkill] = useState('');
   const [lastResult, action] = useActionState(UpdateProfile, undefined);
   const [form, fields] = useForm({
     lastResult,
@@ -37,47 +32,99 @@ const ProfileUpdating = () => {
     shouldRevalidate: 'onInput',
   });
 
+  const addSkill = () => {
+    if (inputSkill && !skills.includes(inputSkill)) {
+      setSkills([...skills, inputSkill]);
+      setInputSkill('');
+    }
+  };
+
+  const removeSkill = (skillToRemove: string) => {
+    setSkills(skills.filter((skill) => skill !== skillToRemove));
+  };
+
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    const formData = new FormData(e.currentTarget);
+
+    formData.append('skills', JSON.stringify(skills));
+
+    action(formData);
+  };
+
   return (
     <div>
       <Card>
         <CardHeader>
-          <CardTitle>Setup your profile</CardTitle>
+          <CardTitle>
+            Setup your profile. Click the button below once you're done...
+          </CardTitle>
         </CardHeader>
-        <CardDescription>
-          Setup your Profile here. Click the button below once your done...
-        </CardDescription>
-        <form id={form.id} onSubmit={form.onSubmit} action={action}>
+
+        <form id={form.id} onSubmit={handleSubmit}>
           <CardContent>
             <div className="flex flex-col gap-y-6">
-              <div className="grid gap-3">
-                <Label>Add your current status here</Label>
-                <Select>
-                  <SelectTrigger>
-                    <SelectValue>test</SelectValue>
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="opentowork">Open To Work</SelectItem>
-                    <SelectItem value="opentowork">Unemployed</SelectItem>
-                    <SelectItem value="opentowork">Employed</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
               <div className="grid gap-3">
                 <Label>Description</Label>
                 <Input
                   key={fields.description.key}
                   name={fields.description.name}
                   defaultValue={fields.description.initialValue}
-                  placeholder="Decribe your self"
+                  placeholder="Describe yourself"
                 />
                 <p className="text-red-500 text-sm">
                   {fields.description.errors}
                 </p>
               </div>
+
+              <div className="mt-4">
+                <label
+                  htmlFor="skillsInput"
+                  className="block text-sm font-medium text-gray-700"
+                >
+                  Add Skill
+                </label>
+                <div className="flex space-x-2">
+                  <input
+                    type="text"
+                    id="skillsInput"
+                    className="p-2 border rounded-md flex-1"
+                    value={inputSkill}
+                    onChange={(e) => setInputSkill(e.target.value)}
+                    placeholder="Type a skill..."
+                  />
+                  <button
+                    type="button"
+                    className="bg-blue-500 text-white px-3 py-2 rounded-md"
+                    onClick={addSkill}
+                  >
+                    Add
+                  </button>
+                </div>
+              </div>
+
+              <div className="mt-2">
+                {skills.map((skill, index) => (
+                  <span
+                    key={index}
+                    className="inline-flex items-center bg-gray-200 text-gray-800 px-3 py-1 rounded-full m-1"
+                  >
+                    {skill}
+                    <button
+                      type="button"
+                      className="ml-2 text-red-500 hover:text-red-700"
+                      onClick={() => removeSkill(skill)}
+                    >
+                      &times;
+                    </button>
+                  </span>
+                ))}
+              </div>
             </div>
           </CardContent>
           <CardFooter>
-            <Button>Submit</Button>
+            <Button type="submit">Submit</Button>
           </CardFooter>
         </form>
       </Card>
