@@ -17,6 +17,12 @@ import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 
+interface ProfileProps {
+  data: {
+    description: string;
+  };
+}
+
 const ProfileUpdating = () => {
   const [skills, setSkills] = useState<string[]>([]);
   const [inputSkill, setInputSkill] = useState('');
@@ -47,14 +53,12 @@ const ProfileUpdating = () => {
     e.preventDefault();
 
     const formData = new FormData(e.currentTarget);
-
     formData.append('skills', JSON.stringify(skills));
-
     action(formData);
   };
 
   return (
-    <div>
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-24">
       <Card>
         <CardHeader>
           <CardTitle>
@@ -72,6 +76,7 @@ const ProfileUpdating = () => {
                   name={fields.description.name}
                   defaultValue={fields.description.initialValue}
                   placeholder="Describe yourself"
+                  className="w-full"
                 />
                 <p className="text-red-500 text-sm">
                   {fields.description.errors}
@@ -85,7 +90,7 @@ const ProfileUpdating = () => {
                 >
                   Add Skill
                 </label>
-                <div className="flex space-x-2">
+                <div className="flex flex-col sm:flex-row sm:space-x-2 space-y-2 sm:space-y-0">
                   <input
                     type="text"
                     id="skillsInput"
@@ -123,7 +128,7 @@ const ProfileUpdating = () => {
               </div>
             </div>
           </CardContent>
-          <CardFooter>
+          <CardFooter className="flex justify-end">
             <Button type="submit">Submit</Button>
           </CardFooter>
         </form>
