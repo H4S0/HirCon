@@ -7,7 +7,6 @@ import { profileSchema } from './utils/zodSchemas';
 import { redirect } from 'next/navigation';
 
 export async function UpdateProfile(prevState: any, formData: FormData) {
-  // Server-side session handling
   const { getUser } = getKindeServerSession();
   const user = await getUser();
 
@@ -27,7 +26,6 @@ export async function UpdateProfile(prevState: any, formData: FormData) {
   const response = await prisma.profile.create({
     data: {
       description: submission.value.description,
-      currentStatus: submission.value.currentStatus,
       skills: submission.value.skills,
       education: submission.value.education,
       experience: submission.value.experience,
