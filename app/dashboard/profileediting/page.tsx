@@ -16,14 +16,18 @@ import {
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
+import EducationModal from '@/app/components/EducationModal';
 
 interface ProfileProps {
   data: {
     description: string;
+    skills: string[];
+    education: JSON;
+    experience: JSON;
   };
 }
 
-const ProfileUpdating = () => {
+const ProfileUpdating = ({ data }: ProfileProps) => {
   const [skills, setSkills] = useState<string[]>([]);
   const [inputSkill, setInputSkill] = useState('');
   const [lastResult, action] = useActionState(UpdateProfile, undefined);
@@ -125,6 +129,9 @@ const ProfileUpdating = () => {
                     </button>
                   </span>
                 ))}
+              </div>
+              <div>
+                <EducationModal form={form} fields={fields} />
               </div>
             </div>
           </CardContent>
