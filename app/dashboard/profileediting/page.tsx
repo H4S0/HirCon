@@ -8,7 +8,6 @@ import { UpdateProfile } from '@/app/actions';
 import {
   Card,
   CardContent,
-  CardDescription,
   CardFooter,
   CardHeader,
   CardTitle,
@@ -17,6 +16,7 @@ import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import EducationModal from '@/app/components/EducationModal';
+import ExperienceModal from '@/app/components/ExperienceModal';
 
 interface ProfileProps {
   data: {
@@ -58,6 +58,7 @@ const ProfileUpdating = ({ data }: ProfileProps) => {
 
     const formData = new FormData(e.currentTarget);
     formData.append('skills', JSON.stringify(skills));
+
     action(formData);
   };
 
@@ -131,7 +132,10 @@ const ProfileUpdating = ({ data }: ProfileProps) => {
                 ))}
               </div>
               <div>
-                <EducationModal form={form} fields={fields} />
+                <EducationModal />
+              </div>
+              <div>
+                <ExperienceModal />
               </div>
             </div>
           </CardContent>
