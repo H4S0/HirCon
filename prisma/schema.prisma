@@ -24,14 +24,41 @@ model User {
 }
 
 model Profile {
-  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  id          String       @id @default(auto()) @map("_id") @db.ObjectId
   description String
   skills      String[] // Array of skills
-  education   Json? // Use Json type to store array of objects
-  experience  Json? // Use Json type to store array of objects
+  education   Education[] // Relation to multiple Education entries
+  experience  Experience[] // Relation to multiple Experience entries
 
   user   User   @relation(name: "UserProfile", fields: [userId], references: [id])
   userId String @unique
 
   createdAt DateTime @default(now())
+}
+
+model Education {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  institution String // Name of the institution
+  degree      Degree // Enum type for degree earned
+  startDate   DateTime // Start date of the education
+  endDate     DateTime // End date of the education
+  profile     Profile  @relation(fields: [profileId], references: [id], onDelete: Cascade)
+  profileId   String   @db.ObjectId // Foreign key to the Profile model
+}
+
+model Experience {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  company   String // Company name
+  role      String // Role or title
+  startDate DateTime // Start date of the experience
+  endDate   DateTime // End date of the experience
+  profile   Profile  @relation(fields: [profileId], references: [id], onDelete: Cascade)
+  profileId String   @db.ObjectId // Foreign key to the Profile model
+}
+
+enum Degree {
+  HIGH_SCHOOL_DIPLOMA
+  BACHELORS
+  MASTERS
+  DOCTORATE
 }
