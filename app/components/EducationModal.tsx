@@ -1,8 +1,6 @@
 import React, { useActionState, useState } from 'react';
 import {
   AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
   AlertDialogContent,
   AlertDialogDescription,
   AlertDialogFooter,
@@ -19,17 +17,20 @@ import {
   SelectContent,
   SelectItem,
 } from '@/components/ui/select';
-import { DatePicker } from './DatePicker';
 import { useForm } from '@conform-to/react';
-import { educationSchema, profileSchema } from '@/app/utils/zodSchemas';
+import { educationSchema } from '@/app/utils/zodSchemas';
 import { Button } from '@/components/ui/button';
 import { parseWithZod } from '@conform-to/zod';
+import { CreateEducation } from '../actions';
 
 const EducationModal = () => {
   const [lastResult, action] = useActionState(CreateEducation, undefined);
+
+  // Check if the form state is getting updated
   const [form, fields] = useForm({
     lastResult,
     onValidate({ formData }) {
+      console.log('Form Data:', formData); // Debugging to check the form data
       return parseWithZod(formData, {
         schema: educationSchema,
       });
@@ -37,81 +38,94 @@ const EducationModal = () => {
     shouldValidate: 'onBlur',
     shouldRevalidate: 'onInput',
   });
-  const [degree, setDegree] = useState(fields.degree.initialValue);
+
+  const handleSubmit = async (e) => {
+    e.preventDefault(); // Prevent the default form submission
+
+    const formData = new FormData(e.currentTarget); // Create a FormData object from the form
+
+    // Call the CreateEducation action directly and wait for the result
+    const result = await CreateEducation(undefined, formData);
+  };
 
   return (
-    <>
+    <div>
       <AlertDialog>
         <AlertDialogTrigger>Add Education</AlertDialogTrigger>
         <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
-            <AlertDialogDescription>
-              <form
-                id={form.id}
-                onSubmit={form.onSubmit}
-                action={action}
-              ></form>
-              <div className="grid gap-6 mt-5">
-                <div className="grid gap-2">
-                  <Label>Institution name</Label>
-                  <Input placeholder="Add Institution name" />
+          <form id={form.id} onSubmit={handleSubmit} action={action}>
+            <AlertDialogHeader>
+              <AlertDialogTitle>
+                Are you sure you want to add this education?
+              </AlertDialogTitle>
+              <AlertDialogDescription>
+                <div className="grid gap-6 mt-5">
+                  {/* Institution */}
+                  <div className="grid gap-2">
+                    <Label htmlFor={fields.institution.name}>
+                      Institution name
+                    </Label>
+                    <Input
+                      key={fields.institution.key}
+                      name={fields.institution.name} // Ensure name is used correctly
+                      defaultValue={fields.institution.initialValue}
+                      placeholder="Add Institution name"
+                    />
+                  </div>
+                  {/* Degree */}
+                  <div className="grid gap-2">
+                    <Label>Degree</Label>
+                    <Select
+                      name={fields.degree.name} // Use name from useForm
+                      defaultValue={fields.degree.initialValue}
+                    >
+                      <SelectTrigger className="w-[180px]">
+                        <SelectValue placeholder="Choose your degree" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="HIGH_SCHOOL_DIPLOMA">
+                          High School Diploma
+                        </SelectItem>
+                        <SelectItem value="BACHELORS">
+                          Bachelor's Degree
+                        </SelectItem>
+                        <SelectItem value="MASTERS">Master's Degree</SelectItem>
+                        <SelectItem value="DOCTORATE">
+                          Doctorate Degree
+                        </SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  {/* Start Date */}
+                  <div className="grid gap-3">
+                    <Label htmlFor={fields.startYear.name}>Starting date</Label>
+                    <Input
+                      key={fields.startYear.key}
+                      name={fields.startYear.name}
+                      defaultValue={fields.startYear.initialValue}
+                      placeholder="Insert start date"
+                    />
+                  </div>
+                  {/* End Date */}
+                  <div className="grid gap-3">
+                    <Label htmlFor={fields.endYear.name}>End date</Label>
+                    <Input
+                      key={fields.endYear.key}
+                      name={fields.endYear.name}
+                      defaultValue={fields.endYear.initialValue}
+                      placeholder="Insert end date"
+                    />
+                  </div>
                 </div>
-                <div className="grid gap-2">
-                  <Label>Degree</Label>
-                  <Select
-                    name={fields.degree.name}
-                    value={degree}
-                    onValueChange={(value) => {
-                      setDegree(value);
-                      fields.degree.value = value;
-                    }}
-                  >
-                    <SelectTrigger className="w-[180px]">
-                      <SelectValue placeholder="Theme" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="HIGH_SCHOOL_DIPLOMA">
-                        High School Diploma
-                      </SelectItem>
-                      <SelectItem value="BACHELORS">
-                        Bachelor's Degree
-                      </SelectItem>
-                      <SelectItem value="MASTERS">Master's Degree</SelectItem>
-                      <SelectItem value="DOCTORATE">
-                        Doctorate Degree
-                      </SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-                <div className="grid gap-3">
-                  <Label>Starting date</Label>
-                  <Input
-                    key={fields.startYear.key}
-                    name={fields.startYear.name}
-                    defaultValue={fields.startYear.initialValue}
-                    placeholder="Insert start date"
-                  />
-                </div>
-                <div className="grid gap-3">
-                  <Label>End date</Label>
-                  <Input
-                    key={fields.endYear.key}
-                    name={fields.endYear.name}
-                    defaultValue={fields.endYear.initialValue}
-                    placeholder="Insert start date"
-                  />
-                </div>
-              </div>
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
-            <Button>Submit</Button>
-          </AlertDialogFooter>
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <Button type="submit">Submit</Button>
+            </AlertDialogFooter>
+          </form>
         </AlertDialogContent>
       </AlertDialog>
-    </>
+    </div>
   );
 };
 
