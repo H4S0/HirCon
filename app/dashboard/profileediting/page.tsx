@@ -44,13 +44,15 @@ const ProfileUpdating = () => {
     setSkills(skills.filter((skill) => skill !== skillToRemove));
   };
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     const formData = new FormData(e.currentTarget);
     formData.append('skills', JSON.stringify(skills));
 
-    action(formData);
+    const prevState = lastResult;
+
+    await UpdateProfile(prevState, formData); // Directly call your action function (UpdateProfile)
   };
 
   return (
@@ -70,7 +72,7 @@ const ProfileUpdating = () => {
                 <Input
                   key={fields.description.key}
                   name={fields.description.name}
-                  defaultValue={fields.description.initialValue}
+                  defaultValue={fields.description.initialValue} // Fully control the description value
                   placeholder="Describe yourself"
                   className="w-full"
                 />
@@ -91,12 +93,12 @@ const ProfileUpdating = () => {
                     type="text"
                     id="skillsInput"
                     className="p-2 border rounded-md flex-1"
+                    key={fields.skills.key}
+                    name={fields.skills.name}
                     value={inputSkill}
-                    onChange={(e) => setInputSkill(e.target.value)}
                     placeholder="Type a skill..."
                   />
                   <button
-                    type="button"
                     className="bg-blue-500 text-white px-3 py-2 rounded-md"
                     onClick={addSkill}
                   >
