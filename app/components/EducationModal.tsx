@@ -1,4 +1,4 @@
-import React, { useActionState, useState } from 'react';
+import React, { useActionState } from 'react';
 import {
   AlertDialog,
   AlertDialogContent,
@@ -26,11 +26,9 @@ import { CreateEducation } from '../actions';
 const EducationModal = () => {
   const [lastResult, action] = useActionState(CreateEducation, undefined);
 
-  // Check if the form state is getting updated
   const [form, fields] = useForm({
     lastResult,
     onValidate({ formData }) {
-      console.log('Form Data:', formData); // Debugging to check the form data
       return parseWithZod(formData, {
         schema: educationSchema,
       });
@@ -39,19 +37,20 @@ const EducationModal = () => {
     shouldRevalidate: 'onInput',
   });
 
-  const handleSubmit = async (e) => {
-    e.preventDefault(); // Prevent the default form submission
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
 
-    const formData = new FormData(e.currentTarget); // Create a FormData object from the form
+    const formData = new FormData(e.currentTarget);
 
-    // Call the CreateEducation action directly and wait for the result
     const result = await CreateEducation(undefined, formData);
   };
 
   return (
     <div>
       <AlertDialog>
-        <AlertDialogTrigger>Add Education</AlertDialogTrigger>
+        <AlertDialogTrigger asChild>
+          <Button>Add Education</Button>
+        </AlertDialogTrigger>
         <AlertDialogContent>
           <form id={form.id} onSubmit={handleSubmit} action={action}>
             <AlertDialogHeader>
@@ -60,23 +59,22 @@ const EducationModal = () => {
               </AlertDialogTitle>
               <AlertDialogDescription>
                 <div className="grid gap-6 mt-5">
-                  {/* Institution */}
                   <div className="grid gap-2">
                     <Label htmlFor={fields.institution.name}>
                       Institution name
                     </Label>
                     <Input
                       key={fields.institution.key}
-                      name={fields.institution.name} // Ensure name is used correctly
+                      name={fields.institution.name}
                       defaultValue={fields.institution.initialValue}
                       placeholder="Add Institution name"
                     />
                   </div>
-                  {/* Degree */}
+
                   <div className="grid gap-2">
                     <Label>Degree</Label>
                     <Select
-                      name={fields.degree.name} // Use name from useForm
+                      name={fields.degree.name}
                       defaultValue={fields.degree.initialValue}
                     >
                       <SelectTrigger className="w-[180px]">
@@ -96,7 +94,7 @@ const EducationModal = () => {
                       </SelectContent>
                     </Select>
                   </div>
-                  {/* Start Date */}
+
                   <div className="grid gap-3">
                     <Label htmlFor={fields.startYear.name}>Starting date</Label>
                     <Input
@@ -106,7 +104,7 @@ const EducationModal = () => {
                       placeholder="Insert start date"
                     />
                   </div>
-                  {/* End Date */}
+
                   <div className="grid gap-3">
                     <Label htmlFor={fields.endYear.name}>End date</Label>
                     <Input
