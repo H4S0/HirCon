@@ -1,6 +1,7 @@
 import React, { useActionState } from 'react';
 import {
   AlertDialog,
+  AlertDialogCancel,
   AlertDialogContent,
   AlertDialogDescription,
   AlertDialogFooter,
@@ -52,7 +53,12 @@ const EducationModal = () => {
           <Button>Add Education</Button>
         </AlertDialogTrigger>
         <AlertDialogContent>
-          <form id={form.id} onSubmit={handleSubmit} action={action}>
+          <form
+            id={form.id}
+            onSubmit={handleSubmit}
+            action={action}
+            className="grid gap-5"
+          >
             <AlertDialogHeader>
               <AlertDialogTitle>
                 Are you sure you want to add this education?
@@ -118,6 +124,7 @@ const EducationModal = () => {
               </AlertDialogDescription>
             </AlertDialogHeader>
             <AlertDialogFooter>
+              <AlertDialogCancel>Cancel</AlertDialogCancel>
               <Button type="submit">Submit</Button>
             </AlertDialogFooter>
           </form>
