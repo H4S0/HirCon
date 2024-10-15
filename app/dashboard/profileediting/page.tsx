@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useActionState, useState } from 'react';
+import React, { useState } from 'react';
 import { useForm } from '@conform-to/react';
 import { profileSchema } from '@/app/utils/zodSchemas';
 import { parseWithZod } from '@conform-to/zod';
@@ -21,7 +21,8 @@ import ExperienceModal from '@/app/components/ExperienceModal';
 const ProfileUpdating = () => {
   const [skills, setSkills] = useState<string[]>([]);
   const [inputSkill, setInputSkill] = useState('');
-  const [lastResult, action] = useActionState(UpdateProfile, undefined);
+  const [lastResult, action] = useState();
+
   const [form, fields] = useForm({
     lastResult,
     onValidate({ formData }) {
@@ -29,8 +30,9 @@ const ProfileUpdating = () => {
         schema: profileSchema,
       });
     },
-    shouldValidate: 'onBlur',
-    shouldRevalidate: 'onInput',
+    // Validate only on submit
+    shouldValidate: 'onSubmit',
+    shouldRevalidate: 'onSubmit',
   });
 
   const addSkill = () => {
@@ -45,14 +47,15 @@ const ProfileUpdating = () => {
   };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+    e.preventDefault(); // Prevent default form submission
 
     const formData = new FormData(e.currentTarget);
     formData.append('skills', JSON.stringify(skills));
 
     const prevState = lastResult;
 
-    await UpdateProfile(prevState, formData); // Directly call your action function (UpdateProfile)
+    // Explicitly submit only when the button is clicked
+    await UpdateProfile(prevState, formData);
   };
 
   return (
@@ -93,12 +96,12 @@ const ProfileUpdating = () => {
                     type="text"
                     id="skillsInput"
                     className="p-2 border rounded-md flex-1"
-                    key={fields.skills.key}
-                    name={fields.skills.name}
                     value={inputSkill}
+                    onChange={(e) => setInputSkill(e.target.value)}
                     placeholder="Type a skill..."
                   />
                   <button
+                    type="button"
                     className="bg-blue-500 text-white px-3 py-2 rounded-md"
                     onClick={addSkill}
                   >
