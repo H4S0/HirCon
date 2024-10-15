@@ -7,14 +7,12 @@ const DegreeEnum = z.enum([
   'DOCTORATE',
 ]);
 
-
 export const educationSchema = z.object({
   institution: z.string().min(1, 'Institution is required'),
-  degree: DegreeEnum, 
+  degree: DegreeEnum,
   startYear: z.string(),
   endYear: z.string(),
 });
-
 
 export const experienceSchema = z
   .object({
@@ -34,7 +32,7 @@ export const experienceSchema = z
   );
 
 export const profileSchema = z.object({
-  description: z.string(),
+  description: z.string().min(1, 'Description is required'),
   currentStatus: z.enum(['opentowork', 'employed', 'unemployed']).optional(),
   skills: z.array(z.string()).optional(),
 });
