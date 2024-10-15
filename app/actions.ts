@@ -87,5 +87,5 @@ export async function CreateEducation(prevState: any, formData: FormData) {
     },
   });
 
-  return redirect('/dashboard');
+  return redirect('/dashboard/profileediting');
 }
