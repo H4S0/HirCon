@@ -6,11 +6,14 @@ import { Button } from '@/components/ui/button';
 import {
   LoginLink,
   RegisterLink,
+  LogoutLink,
 } from '@kinde-oss/kinde-auth-nextjs/components';
 import { UsersRound } from 'lucide-react';
 import { Menu, X } from 'lucide-react';
+import { useKindeBrowserClient } from '@kinde-oss/kinde-auth-nextjs';
 
 const Navbar = () => {
+  const { isAuthenticated, isLoading } = useKindeBrowserClient();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const toggleMenu = () => {
@@ -25,18 +28,28 @@ const Navbar = () => {
           <h2 className="text-lg font-semibold">HirCon</h2>
         </div>
         <div className="hidden md:flex gap-6">
-          <Link href={'/dashboard'}>Dashboard</Link>
+          <Link href="/dashboard">Dashboard</Link>
           <Link href={'/profile'}>Profile</Link>
           <Link href={'/company'}>Company</Link>
           <Link href={'/job'}>Find a job</Link>
         </div>
         <div className="hidden md:flex gap-5">
-          <RegisterLink>
-            <Button>Register</Button>
-          </RegisterLink>
-          <LoginLink>
-            <Button>Login</Button>
-          </LoginLink>
+          {isLoading ? (
+            <p className="font-bold">loading...</p>
+          ) : isAuthenticated ? (
+            <LogoutLink>
+              <Button>Logout</Button>
+            </LogoutLink>
+          ) : (
+            <>
+              <RegisterLink>
+                <Button>Register</Button>
+              </RegisterLink>
+              <LoginLink>
+                <Button>Login</Button>
+              </LoginLink>
+            </>
+          )}
         </div>
         <div className="md:hidden">
           <button onClick={toggleMenu}>
@@ -44,7 +57,6 @@ const Navbar = () => {
           </button>
         </div>
       </div>
-      {/* Mobile Menu */}
       <div
         className={`${
           isMenuOpen ? 'max-h-screen opacity-100' : 'max-h-0 opacity-0'
