@@ -17,6 +17,8 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import EducationModal from '@/app/components/EducationModal';
 import ExperienceModal from '@/app/components/ExperienceModal';
+import { Textarea } from '@/components/ui/textarea';
+import DashboardNavbar from '@/app/components/DashboardNavbar';
 
 const ProfileUpdating = () => {
   const [skills, setSkills] = useState<string[]>([]);
@@ -30,7 +32,7 @@ const ProfileUpdating = () => {
         schema: profileSchema,
       });
     },
-    // Validate only on submit
+    
     shouldValidate: 'onSubmit',
     shouldRevalidate: 'onSubmit',
   });
@@ -47,99 +49,99 @@ const ProfileUpdating = () => {
   };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault(); // Prevent default form submission
+    e.preventDefault();
 
     const formData = new FormData(e.currentTarget);
     formData.append('skills', JSON.stringify(skills));
 
     const prevState = lastResult;
 
-    // Explicitly submit only when the button is clicked
+
     await UpdateProfile(prevState, formData);
   };
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-24">
-      <Card>
-        <CardHeader>
-          <CardTitle>
-            Setup your profile. Click the button below once you're done...
-          </CardTitle>
-        </CardHeader>
+      <DashboardNavbar />
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-24 mt-10">
+        <Card>
+          <CardHeader>
+            <CardTitle>
+              Setup your profile. Click the button below once you're done...
+            </CardTitle>
+          </CardHeader>
 
-        <form id={form.id} onSubmit={handleSubmit}>
-          <CardContent>
-            <div className="flex flex-col gap-y-6">
-              <div className="grid gap-3">
-                <Label>Description</Label>
-                <Input
-                  key={fields.description.key}
-                  name={fields.description.name}
-                  defaultValue={fields.description.initialValue} // Fully control the description value
-                  placeholder="Describe yourself"
-                  className="w-full"
-                />
-                <p className="text-red-500 text-sm">
-                  {fields.description.errors}
-                </p>
-              </div>
-
-              <div className="mt-4">
-                <label
-                  htmlFor="skillsInput"
-                  className="block text-sm font-medium text-gray-700"
-                >
-                  Add Skill
-                </label>
-                <div className="flex flex-col sm:flex-row sm:space-x-2 space-y-2 sm:space-y-0">
-                  <input
-                    type="text"
-                    id="skillsInput"
-                    className="p-2 border rounded-md flex-1"
-                    value={inputSkill}
-                    onChange={(e) => setInputSkill(e.target.value)}
-                    placeholder="Type a skill..."
+          <form id={form.id} onSubmit={handleSubmit}>
+            <CardContent>
+              <div className="flex flex-col gap-y-6">
+                <div className="grid gap-3">
+                  <Label className="font-semibold">Description</Label>
+                  <Textarea
+                    key={fields.description.key}
+                    name={fields.description.name}
+                    defaultValue={fields.description.initialValue} 
+                    placeholder="Describe yourself"
+                    className="w-full h-32"
                   />
-                  <button
-                    type="button"
-                    className="bg-blue-500 text-white px-3 py-2 rounded-md"
-                    onClick={addSkill}
+                  <p className="text-red-500 text-sm">
+                    {fields.description.errors}
+                  </p>
+                </div>
+
+                <div className="mt-4">
+                  <label
+                    htmlFor="skillsInput"
+                    className="block text-sm font-semibold text-gray-700"
                   >
-                    Add
-                  </button>
+                    Add Skill
+                  </label>
+                  <div className="flex flex-col sm:flex-row sm:space-x-2 space-y-2 sm:space-y-0 items-center">
+                    <Input
+                      type="text"
+                      id="skillsInput"
+                      className="p-2 border rounded-md flex-1"
+                      value={inputSkill}
+                      onChange={(e) => setInputSkill(e.target.value)}
+                      placeholder="Type a skill..."
+                    />
+                    <Button type="button" onClick={addSkill}>
+                      Add
+                    </Button>
+                    <p>{fields.skills.errors}</p>
+                  </div>
+                </div>
+
+                <div className="mt-2">
+                  {skills.map((skill, index) => (
+                    <span
+                      key={index}
+                      className="inline-flex items-center bg-gray-200 text-gray-800 px-3 py-1 rounded-full m-1"
+                    >
+                      {skill}
+                      <button
+                        type="button"
+                        className="ml-2 text-red-500 hover:text-red-700"
+                        onClick={() => removeSkill(skill)}
+                      >
+                        &times;
+                      </button>
+                    </span>
+                  ))}
+                </div>
+                <div>
+                  <EducationModal />
+                </div>
+                <div>
+                  <ExperienceModal />
                 </div>
               </div>
-
-              <div className="mt-2">
-                {skills.map((skill, index) => (
-                  <span
-                    key={index}
-                    className="inline-flex items-center bg-gray-200 text-gray-800 px-3 py-1 rounded-full m-1"
-                  >
-                    {skill}
-                    <button
-                      type="button"
-                      className="ml-2 text-red-500 hover:text-red-700"
-                      onClick={() => removeSkill(skill)}
-                    >
-                      &times;
-                    </button>
-                  </span>
-                ))}
-              </div>
-              <div>
-                <EducationModal />
-              </div>
-              <div>
-                <ExperienceModal />
-              </div>
-            </div>
-          </CardContent>
-          <CardFooter className="flex justify-end">
-            <Button type="submit">Submit</Button>
-          </CardFooter>
-        </form>
-      </Card>
+            </CardContent>
+            <CardFooter className="flex justify-end">
+              <Button type="submit">Submit</Button>
+            </CardFooter>
+          </form>
+        </Card>
+      </div>
     </div>
   );
 };
