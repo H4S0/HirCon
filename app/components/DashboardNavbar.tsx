@@ -22,7 +22,7 @@ const DashboardNavbar = () => {
           <UsersRound className="mr-2" />
           <h2 className="text-lg font-semibold">HirCon</h2>
         </div>
-        <div className="hidden md:flex gap-6">
+        <div className="hidden md:flex gap-6 items-center">
           <Link href="/dashboard">Dashboard</Link>
           <Link href="/dashboard/profileediting">Profile</Link>
           <Link href="/dashboard/company">Company</Link>
@@ -46,7 +46,6 @@ const DashboardNavbar = () => {
           {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
         </button>
       </div>
-
 
       <div
         className={`${
