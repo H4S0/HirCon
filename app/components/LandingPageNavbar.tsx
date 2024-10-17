@@ -23,10 +23,12 @@ const Navbar = () => {
   return (
     <>
       <div className="flex justify-between py-6 items-center px-4 md:px-8">
-        <div className="flex items-center">
-          <UsersRound className="mr-2" />
-          <h2 className="text-lg font-semibold">HirCon</h2>
-        </div>
+        <Link href={'/'}>
+          <div className="flex items-center">
+            <UsersRound className="mr-2" />
+            <h2 className="text-lg font-semibold">HirCon</h2>
+          </div>
+        </Link>
         <div className="hidden md:flex gap-6">
           <Link href="/dashboard">Dashboard</Link>
           <Link href={'/profile'}>Profile</Link>
