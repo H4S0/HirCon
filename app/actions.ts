@@ -3,7 +3,11 @@
 import { parseWithZod } from '@conform-to/zod';
 import { getKindeServerSession } from '@kinde-oss/kinde-auth-nextjs/server';
 import prisma from './utils/db';
-import { educationSchema, profileSchema } from './utils/zodSchemas';
+import {
+  educationSchema,
+  experienceSchema,
+  profileSchema,
+} from './utils/zodSchemas';
 import { redirect } from 'next/navigation';
 
 export async function UpdateProfile(prevState: any, formData: FormData) {
@@ -87,5 +91,44 @@ export async function CreateEducation(prevState: any, formData: FormData) {
     },
   });
 
+  return redirect('/dashboard/profileediting');
+}
+
+export async function CreateExperience(prevState: any, formData: FormData) {
+  const { getUser } = getKindeServerSession();
+  const user = getUser();
+
+  if (!user) {
+    return redirect('/api/auth/login');
+  }
+
+  const submission = parseWithZod(formData, {
+    schema: experienceSchema,
+  });
+
+  if (submission.status !== 'success') {
+    return submission.reply();
+  }
+
+  const profile = await prisma.profile.findUnique({
+    where: {
+      userId: (await user).id,
+    },
+  });
+
+  if (!profile) {
+    return redirect('/profile/create');
+  }
+
+  const experience = await prisma.experience.create({
+    data: {
+      company: submission.value.company,
+      role: submission.value.role,
+      startDate: submission.value.startYear,
+      endDate: submission.value.endYear,
+      roleDescription: submission.value.roleDescription,
+      profileId: profile.id,
+    },
+  });
   return redirect('/dashboard/profileediting');
 }
