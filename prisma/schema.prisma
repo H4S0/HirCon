@@ -12,7 +12,7 @@ datasource db {
 
 model User {
   id           String  @id @default(auto()) @map("_id") @db.ObjectId
-  kindeId      String  @unique @db.ObjectId // Store Kinde user ID
+  kindeId      String  @unique // Store Kinde user ID as a string, not ObjectId
   firstName    String
   lastName     String
   email        String  @unique
@@ -47,13 +47,14 @@ model Education {
 }
 
 model Experience {
-  id        String   @id @default(auto()) @map("_id") @db.ObjectId
-  company   String // Company name
-  role      String // Role or title
-  startDate DateTime // Start date of the experience
-  endDate   DateTime // End date of the experience
-  profile   Profile  @relation(fields: [profileId], references: [id], onDelete: Cascade)
-  profileId String   @db.ObjectId // Foreign key to the Profile model
+  id              String  @id @default(auto()) @map("_id") @db.ObjectId
+  company         String // Company name
+  role            String // Role or title
+  startDate       String // Start date of the experience
+  endDate         String // End date of the experience
+  roleDescription String
+  profile         Profile @relation(fields: [profileId], references: [id], onDelete: Cascade)
+  profileId       String  @db.ObjectId // Foreign key to the Profile model
 }
 
 enum Degree {
