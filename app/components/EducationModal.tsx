@@ -1,4 +1,4 @@
-import React, { useActionState } from 'react';
+import React, { useActionState, useEffect, useState } from 'react';
 import {
   AlertDialog,
   AlertDialogCancel,
@@ -23,10 +23,33 @@ import { educationSchema } from '@/app/utils/zodSchemas';
 import { Button } from '@/components/ui/button';
 import { parseWithZod } from '@conform-to/zod';
 import { CreateEducation } from '../actions';
+import prisma from '../utils/db';
+import { getKindeServerSession } from '@kinde-oss/kinde-auth-nextjs/server';
+import { redirect } from 'next/navigation';
+
+async function getData(userId: string) {
+  const data = await prisma.profile.findMany({
+    where: {
+      userId: userId,
+    },
+    orderBy: {
+      createdAt: 'desc',
+    },
+  });
+  return data;
+}
+
+interface Data {
+  id: string;
+  description: string;
+  skills: string[];
+  userId: string;
+  createdAt: Date;
+}
 
 const EducationModal = () => {
+  const [data, setData] = useState<Data[]>();
   const [lastResult, action] = useActionState(CreateEducation, undefined);
-
   const [form, fields] = useForm({
     lastResult,
     onValidate({ formData }) {
@@ -45,6 +68,25 @@ const EducationModal = () => {
 
     const result = await CreateEducation(undefined, formData);
   };
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const { getUser } = getKindeServerSession();
+      const user = await getUser();
+
+      if (!user) {
+        return redirect('/api/auth/login');
+      } else {
+        const profileData = await getData(user.id);
+        setData(profileData);
+      }
+    };
+    fetchData();
+  }, []);
+
+  const checkingData = data?.map((item) => {
+    return item.description, item.skills;
+  });
 
   return (
     <div>
