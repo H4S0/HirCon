@@ -1,6 +1,7 @@
 import React, { useActionState, useEffect, useState } from 'react';
 import {
   AlertDialog,
+  AlertDialogAction,
   AlertDialogCancel,
   AlertDialogContent,
   AlertDialogDescription,
@@ -24,7 +25,7 @@ import { Button } from '@/components/ui/button';
 import { parseWithZod } from '@conform-to/zod';
 import { CreateEducation } from '../actions';
 
-interface Data {
+export interface Data {
   id: string;
   description: string;
   skills: string[];
@@ -67,10 +68,6 @@ const EducationModal = () => {
     return item.description;
   });
 
-  const skillsData = data?.map((item) => {
-    return item.skills;
-  });
-
   return (
     <div>
       <AlertDialog>
@@ -79,7 +76,10 @@ const EducationModal = () => {
         </AlertDialogTrigger>
         <AlertDialogContent>
           {checkingData == 0 ? (
-            'Please make sure to fill descrtiption first'
+            <>
+              <p>Please make sure first to fill description!</p>
+              <AlertDialogAction>Continute</AlertDialogAction>
+            </>
           ) : (
             <form
               id={form.id}
