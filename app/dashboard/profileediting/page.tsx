@@ -32,7 +32,6 @@ const ProfileUpdating = () => {
         schema: profileSchema,
       });
     },
-    
     shouldValidate: 'onSubmit',
     shouldRevalidate: 'onSubmit',
   });
@@ -49,14 +48,14 @@ const ProfileUpdating = () => {
   };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+    e.preventDefault(); // Prevent default form submission
 
     const formData = new FormData(e.currentTarget);
     formData.append('skills', JSON.stringify(skills));
 
     const prevState = lastResult;
 
-
+    // Explicitly submit only when the button is clicked
     await UpdateProfile(prevState, formData);
   };
 
@@ -67,7 +66,12 @@ const ProfileUpdating = () => {
         <Card>
           <CardHeader>
             <CardTitle>
-              Setup your profile. Click the button below once you're done...
+              <div className="grid gap-3">
+                <h2>Setup profile</h2>
+                <p className="font-semibold">
+                  Click the submit button below once you're done...
+                </p>
+              </div>
             </CardTitle>
           </CardHeader>
 
@@ -79,7 +83,7 @@ const ProfileUpdating = () => {
                   <Textarea
                     key={fields.description.key}
                     name={fields.description.name}
-                    defaultValue={fields.description.initialValue} 
+                    defaultValue={fields.description.initialValue} // Fully control the description value
                     placeholder="Describe yourself"
                     className="w-full h-32"
                   />
