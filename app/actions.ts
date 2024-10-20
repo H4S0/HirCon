@@ -78,7 +78,7 @@ export async function CreateEducation(prevState: any, formData: FormData) {
   });
 
   if (!profile) {
-    return redirect('/profile/create');
+    return redirect('/dashboard/profileediting');
   }
 
   const education = await prisma.education.create({
@@ -117,7 +117,7 @@ export async function CreateExperience(prevState: any, formData: FormData) {
   });
 
   if (!profile) {
-    return redirect('/profile/create');
+    return redirect('/dashboard/profileediting');
   }
 
   const experience = await prisma.experience.create({
