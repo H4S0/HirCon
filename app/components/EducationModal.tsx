@@ -1,46 +1,34 @@
-import React, { useActionState, useEffect, useState } from 'react';
+import {
+  AlertDialogHeader,
+  AlertDialogFooter,
+  AlertDialogAction,
+} from '@/components/ui/alert-dialog';
 import {
   AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
   AlertDialogTrigger,
+  AlertDialogContent,
+  AlertDialogTitle,
+  AlertDialogDescription,
+  AlertDialogCancel,
 } from '@/components/ui/alert-dialog';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
-import {
-  Select,
-  SelectTrigger,
-  SelectValue,
-  SelectContent,
-  SelectItem,
-} from '@/components/ui/select';
-import { useForm } from '@conform-to/react';
-import { educationSchema } from '@/app/utils/zodSchemas';
+import React, { useActionState, useEffect, useState } from 'react';
 import { Button } from '@/components/ui/button';
+import { CreateExperience } from '../actions';
+import { useForm } from '@conform-to/react';
 import { parseWithZod } from '@conform-to/zod';
-import { CreateEducation } from '../actions';
+import { experienceSchema } from '../utils/zodSchemas';
+import { Data } from './EducationModal';
 
-export interface Data {
-  id: string;
-  description: string;
-  skills: string[];
-  userId: string;
-  createdAt: Date;
-}
-
-const EducationModal = () => {
+const ExperienceModal = () => {
   const [data, setData] = useState<Data[]>();
-  const [lastResult, action] = useActionState(CreateEducation, undefined);
+  const [lastResult, action] = useActionState(CreateExperience, undefined);
   const [form, fields] = useForm({
     lastResult,
     onValidate({ formData }) {
       return parseWithZod(formData, {
-        schema: educationSchema,
+        schema: experienceSchema,
       });
     },
     shouldValidate: 'onBlur',
@@ -49,10 +37,9 @@ const EducationModal = () => {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-
     const formData = new FormData(e.currentTarget);
 
-    const result = await CreateEducation(undefined, formData);
+    const result = await CreateExperience(undefined, formData);
   };
 
   useEffect(() => {
@@ -69,10 +56,10 @@ const EducationModal = () => {
   });
 
   return (
-    <div>
+    <>
       <AlertDialog>
         <AlertDialogTrigger asChild>
-          <Button>Add Education</Button>
+          <Button>Add Experience</Button>
         </AlertDialogTrigger>
         <AlertDialogContent>
           {checkingData == 0 ? (
@@ -88,68 +75,52 @@ const EducationModal = () => {
               className="grid gap-5"
             >
               <AlertDialogHeader>
-                <AlertDialogTitle>
-                  Are you sure you want to add this education?
-                </AlertDialogTitle>
+                <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
                 <AlertDialogDescription>
                   <div className="grid gap-6 mt-5">
                     <div className="grid gap-2">
-                      <Label htmlFor={fields.institution.name}>
-                        Institution name
-                      </Label>
+                      <Label>Company name</Label>
                       <Input
-                        key={fields.institution.key}
-                        name={fields.institution.name}
-                        defaultValue={fields.institution.initialValue}
-                        placeholder="Add Institution name"
+                        key={fields.company.key}
+                        name={fields.company.name}
+                        defaultValue={fields.company.initialValue}
+                        placeholder="Add Company name"
                       />
                     </div>
-
                     <div className="grid gap-2">
-                      <Label>Degree</Label>
-                      <Select
-                        name={fields.degree.name}
-                        defaultValue={fields.degree.initialValue}
-                      >
-                        <SelectTrigger className="w-[180px]">
-                          <SelectValue placeholder="Choose your degree" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="HIGH_SCHOOL_DIPLOMA">
-                            High School Diploma
-                          </SelectItem>
-                          <SelectItem value="BACHELORS">
-                            Bachelor's Degree
-                          </SelectItem>
-                          <SelectItem value="MASTERS">
-                            Master's Degree
-                          </SelectItem>
-                          <SelectItem value="DOCTORATE">
-                            Doctorate Degree
-                          </SelectItem>
-                        </SelectContent>
-                      </Select>
-                    </div>
-
-                    <div className="grid gap-3">
-                      <Label htmlFor={fields.startYear.name}>
-                        Starting date
-                      </Label>
+                      <Label>Add your role</Label>
                       <Input
-                        key={fields.startYear.key}
-                        name={fields.startYear.name}
-                        defaultValue={fields.startYear.initialValue}
-                        placeholder="Insert start date"
+                        key={fields.role.key}
+                        name={fields.role.name}
+                        defaultValue={fields.role.initialValue}
+                        placeholder="Add your role"
                       />
                     </div>
-
                     <div className="grid gap-3">
-                      <Label htmlFor={fields.endYear.name}>End date</Label>
+                      <Label>Starting date</Label>
                       <Input
-                        key={fields.endYear.key}
+                        type="date"
+                        name={fields.startYear.name}
+                        key={fields.startYear.key}
+                        defaultValue={fields.startYear.initialValue}
+                      />
+                    </div>
+                    <div className="grid gap-3">
+                      <Label>End date</Label>
+                      <Input
+                        type="date"
                         name={fields.endYear.name}
+                        key={fields.endYear.key}
                         defaultValue={fields.endYear.initialValue}
-                        placeholder="Insert end date"
+                      />
+                    </div>
+                    <div className="grid gap-3">
+                      <Label>Short description abour your role</Label>
+                      <Input
+                        placeholder="Describe your role"
+                        key={fields.roleDescription.key}
+                        name={fields.roleDescription.name}
+                        defaultValue={fields.roleDescription.initialValue}
                       />
                     </div>
                   </div>
@@ -157,14 +128,14 @@ const EducationModal = () => {
               </AlertDialogHeader>
               <AlertDialogFooter>
                 <AlertDialogCancel>Cancel</AlertDialogCancel>
-                <Button type="submit">Submit</Button>
+                <Button>Submit</Button>
               </AlertDialogFooter>
             </form>
           )}
         </AlertDialogContent>
       </AlertDialog>
-    </div>
+    </>
   );
 };
 
-export default EducationModal;
+export default ExperienceModal;
