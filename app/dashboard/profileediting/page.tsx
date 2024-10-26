@@ -92,7 +92,7 @@ const ProfileUpdating = () => {
                   </p>
                 </div>
 
-                <div className="mt-4">
+                <div className="grid gap-3">
                   <label
                     htmlFor="skillsInput"
                     className="block text-sm font-semibold text-gray-700"
@@ -114,7 +114,10 @@ const ProfileUpdating = () => {
                     <p>{fields.skills.errors}</p>
                   </div>
                 </div>
-
+                <div className="grid gap-3">
+                  <Label className="font-semibold">Type your Location</Label>
+                  <Input placeholder="City / Country" />
+                </div>
                 <div className="mt-2">
                   {skills.map((skill, index) => (
                     <span
