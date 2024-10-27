@@ -4,6 +4,7 @@ import { getKindeServerSession } from '@kinde-oss/kinde-auth-nextjs/server';
 import { redirect } from 'next/navigation';
 import prisma from '../utils/db';
 import Image from 'next/image';
+import Link from 'next/link';
 
 async function getData(userId: string) {
   const data = await prisma.profile.findMany({
@@ -21,7 +22,7 @@ async function getEducationData(profileId: string) {
       profileId,
     },
     select: {
-      id: true, 
+      id: true,
       institution: true,
       startDate: true,
       endDate: true,
@@ -69,6 +70,7 @@ const ProfilePage = async () => {
         >
           {userData ? (
             <div className="flex flex-col items-center gap-6">
+              {/* Profile Header */}
               <div className="flex items-center gap-4 mb-6">
                 <Image
                   src={userData.profileImage}
@@ -88,6 +90,7 @@ const ProfilePage = async () => {
                 </div>
               </div>
 
+              {/* About Section */}
               <div className="w-full bg-gray-50 p-4 rounded-lg shadow-inner mb-6">
                 <h3 className="text-lg font-medium text-gray-700 mb-2">
                   About
@@ -95,6 +98,7 @@ const ProfilePage = async () => {
                 <p className="text-gray-600">{item.description}</p>
               </div>
 
+              {/* Skills Section */}
               <div className="w-full bg-gray-50 p-4 rounded-lg shadow-inner mb-6">
                 <h3 className="text-lg font-medium text-gray-700 mb-2">
                   Skills
@@ -102,6 +106,7 @@ const ProfilePage = async () => {
                 <p className="text-gray-600">{item.skills.join(', ')}</p>
               </div>
 
+              {/* Experience Section */}
               <div className="w-full bg-gray-50 p-4 rounded-lg shadow-inner mb-6">
                 <h3 className="text-lg font-medium text-gray-700 mb-2">
                   Experience
@@ -114,11 +119,13 @@ const ProfilePage = async () => {
                 </p>
               </div>
 
+              {/* Education Section */}
               <div className="w-full bg-gray-50 p-4 rounded-lg shadow-inner mb-6">
                 <div className="flex items-center justify-between">
                   <h3 className="text-lg font-medium text-gray-700 mb-2">
                     Education
                   </h3>
+                  {/* Add New Education Button */}
                   <button className="text-sm text-blue-500 hover:underline">
                     + Add New Education
                   </button>
@@ -138,9 +145,12 @@ const ProfilePage = async () => {
                           {eduItem.startDate} - {eduItem.endDate}
                         </p>
                       </div>
-                      <button className="text-blue-500 text-sm hover:underline">
-                        Edit
-                      </button>
+                      {/* Edit Education Button */}
+                      <Link href={`/dashboard/${eduItem.id}`}>
+                        <button className="text-blue-500 text-sm hover:underline">
+                          Edit
+                        </button>
+                      </Link>
                     </div>
                   ))
                 ) : (
