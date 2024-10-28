@@ -1,5 +1,13 @@
 'use client';
 
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
+
 import React, { useState } from 'react';
 import { useForm } from '@conform-to/react';
 import { profileSchema } from '@/app/utils/zodSchemas';
@@ -79,11 +87,24 @@ const ProfileUpdating = () => {
             <CardContent>
               <div className="flex flex-col gap-y-6">
                 <div className="grid gap-3">
+                  <Label className="font-semibold">Your current status</Label>
+                  <Select id="status" name="status">
+                    <SelectTrigger className="w-[180px]">
+                      <SelectValue placeholder="Theme" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="EMPLOYED">Employed</SelectItem>
+                      <SelectItem value="UNEMPLOYED">Unemployed</SelectItem>
+                      <SelectItem value="OPENTOWORK">Open to work</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div className="grid gap-3">
                   <Label className="font-semibold">Description</Label>
                   <Textarea
                     key={fields.description.key}
                     name={fields.description.name}
-                    defaultValue={fields.description.initialValue} // Fully control the description value
+                    defaultValue={fields.description.initialValue}
                     placeholder="Describe yourself"
                     className="w-full h-32"
                   />
@@ -116,7 +137,14 @@ const ProfileUpdating = () => {
                 </div>
                 <div className="grid gap-3">
                   <Label className="font-semibold">Type your Location</Label>
-                  <Input placeholder="City / Country" />
+                  <Input
+                    placeholder="City / Country"
+                    key={fields.location.key}
+                    name={fields.location.name}
+                    defaultValue={fields.location.initialValue}
+                    required
+                  />
+                  <p>{fields.location.errors}</p>
                 </div>
                 <div className="mt-2">
                   {skills.map((skill, index) => (
