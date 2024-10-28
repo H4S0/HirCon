@@ -83,10 +83,10 @@ const ProfilePage = async () => {
                   <h2 className="text-2xl font-semibold text-gray-800">
                     {userData.firstName} {userData.lastName}
                   </h2>
-                  <p className="text-gray-600">Frontend Developer at JobApp</p>
-                  <p className="text-sm text-gray-500">
-                    Sarajevo, Bosnia and Herzegovina
+                  <p className="text-gray-600">
+                    Current status: {item.employedStatus}
                   </p>
+                  <p className="text-sm text-gray-500">{item.location}</p>
                 </div>
               </div>
 
