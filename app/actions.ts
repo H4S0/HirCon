@@ -40,6 +40,8 @@ export async function UpdateProfile(prevState: any, formData: FormData) {
       data: {
         description: submission.value.description,
         skills: submission.value.skills,
+        location: submission.value.location,
+        employedStatus: submission.value.status,
       },
     });
   } else {
@@ -47,6 +49,8 @@ export async function UpdateProfile(prevState: any, formData: FormData) {
       data: {
         description: submission.value.description,
         skills: submission.value.skills,
+        location: submission.value.location,
+        employedStatus: submission.value.status,
         userId: user.id,
       },
     });
