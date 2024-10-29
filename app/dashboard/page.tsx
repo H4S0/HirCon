@@ -5,6 +5,7 @@ import { redirect } from 'next/navigation';
 import prisma from '../utils/db';
 import Image from 'next/image';
 import Link from 'next/link';
+import EducationModal from '../components/EducationModal';
 
 async function getData(userId: string) {
   const data = await prisma.profile.findMany({
@@ -84,7 +85,12 @@ const ProfilePage = async () => {
                     {userData.firstName} {userData.lastName}
                   </h2>
                   <p className="text-gray-600">
-                    Current status: {item.employedStatus}
+                    Current status:{' '}
+                    {item.employedStatus === 'OPENTOWORK'
+                      ? 'Open to work'
+                      : item.employedStatus === 'EMPLOYED'
+                      ? 'Employed'
+                      : 'Unemployed'}
                   </p>
                   <p className="text-sm text-gray-500">{item.location}</p>
                 </div>
@@ -103,7 +109,15 @@ const ProfilePage = async () => {
                 <h3 className="text-lg font-medium text-gray-700 mb-2">
                   Skills
                 </h3>
-                <p className="text-gray-600">{item.skills.join(', ')}</p>
+                {item.skills.map((skill) =>
+                  skill === '[]' ? (
+                    <p key={skill}>
+                      Make sure to add some skills at profile page !!
+                    </p>
+                  ) : (
+                    skill
+                  )
+                )}
               </div>
 
               {/* Experience Section */}
@@ -125,10 +139,6 @@ const ProfilePage = async () => {
                   <h3 className="text-lg font-medium text-gray-700 mb-2">
                     Education
                   </h3>
-                  {/* Add New Education Button */}
-                  <button className="text-sm text-blue-500 hover:underline">
-                    + Add New Education
-                  </button>
                 </div>
                 {educationData.length > 0 ? (
                   educationData.map((eduItem) => (
@@ -154,7 +164,16 @@ const ProfilePage = async () => {
                     </div>
                   ))
                 ) : (
-                  <p className="text-gray-500">No education records found.</p>
+                  <p className="text-gray-500">
+                    No education records found. Go to your profile to add
+                    education.
+                    <Link
+                      href={'/dashboard/profileediting'}
+                      className="font-semibold underline ml-3"
+                    >
+                      Profile
+                    </Link>
+                  </p>
                 )}
               </div>
             </div>
