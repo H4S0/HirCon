@@ -48,6 +48,23 @@ async function getUserData(kindeId: string) {
   return userData;
 }
 
+async function getUserExperience(profileId: string) {
+  const userExperience = await prisma.experience.findMany({
+    where: {
+      profileId,
+    },
+    select: {
+      company: true,
+      role: true,
+      roleDescription: true,
+      startDate: true,
+      endDate: true,
+      id: true,
+    },
+  });
+  return userExperience;
+}
+
 const ProfilePage = async () => {
   const { isAuthenticated, getUser } = getKindeServerSession();
   const isUserAuthenticated = await isAuthenticated();
@@ -60,6 +77,7 @@ const ProfilePage = async () => {
   const userData = await getUserData(user.id);
   const profileData = await getData(user.id);
   const educationData = await getEducationData(user.profileId);
+  const experienceData = await getUserExperience(user.profileId);
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-24">
@@ -122,15 +140,32 @@ const ProfilePage = async () => {
 
               {/* Experience Section */}
               <div className="w-full bg-gray-50 p-4 rounded-lg shadow-inner mb-6">
-                <h3 className="text-lg font-medium text-gray-700 mb-2">
-                  Experience
-                </h3>
-                <p className="text-gray-600">
-                  Frontend Developer at JobApp (2023 - Present)
-                </p>
-                <p className="text-gray-500 text-sm">
-                  Responsible for building and maintaining user-facing features.
-                </p>
+                {experienceData.length > 0 ? (
+                  experienceData.map((exp) => (
+                    <div
+                      key={exp.id}
+                      className="border-b border-gray-200 pb-4 mb-4 flex justify-between items-center"
+                    >
+                      <div>
+                        <h4 className="text-gray-800 font-semibold">
+                          {exp.company}
+                        </h4>
+                        <p className="text-gray-600">{exp.role}</p>
+                        <p className="text-gray-500 text-sm">
+                          {exp.startDate} - {exp.endDate}
+                        </p>
+                      </div>
+
+                      <Link href={`/dashboard/${exp.id}`}>
+                        <button className="text-blue-500 text-sm hover:underline">
+                          Edit
+                        </button>
+                      </Link>
+                    </div>
+                  ))
+                ) : (
+                  <p>No experience</p>
+                )}
               </div>
 
               {/* Education Section */}
