@@ -1,29 +1,92 @@
 import React from 'react';
 import Navbar from '../LandingPageNavbar';
-import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
+import Image from 'next/image';
+import ProfilePicture from '@/app/images/Profile-picture-created-with-ai.jpeg';
+
 const Hero = () => {
   return (
     <>
       <Navbar />
-      <div>
-        <div>
-          <div>
-            <p>Find Your</p>
-            <p>Ideal Job</p>
+      <div className="py-16 px-4">
+        <div className="text-center max-w-3xl mx-auto mb-10">
+          <h1 className="text-3xl md:text-5xl font-bold mb-4 text-gray-800">
+            Find the best people for your company
+          </h1>
+          <p className="text-lg md:text-xl text-gray-600 mb-6">
+            Connect with top candidates who can take your company to the next
+            level.
+          </p>
+          <Button className="px-8 py-3 bg-blue-600 text-white font-semibold rounded-md">
+            Get Started
+          </Button>
+        </div>
+
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-8 max-w-5xl mx-auto items-end">
+          <div className="flex flex-col items-center bg-slate-300 p-4 rounded-lg shadow-md h-80">
+            <h3 className="text-slate-600 text-center font-semibold mb-2">
+              James Samerton
+            </h3>
+            <p className="text-slate-500 text-sm font-semibold">
+              Mobile Developer
+            </p>
+            <Image
+              src={ProfilePicture}
+              alt="profile picture"
+              width={200}
+              height={200}
+              className="object-cover w-full h-3/4 shadow-2xl rounded-lg mt-5"
+            />
           </div>
-          <Input placeholder="Search job" />
-          <div>
-            <div>
-              <p>8M+</p>
-              <p>Matched Made</p>
-            </div>
-            <div>
-              <p>Unlocking your potential</p>
-              <p>View all job offers</p>
-            </div>
+
+          <div className="flex flex-col items-center bg-slate-200 p-4 rounded-lg shadow-md h-72 mt-10">
+            <h3 className="text-slate-600 text-center font-semibold mb-2">
+              James Samerton
+            </h3>
+            <p className="text-slate-500 text-sm font-semibold">
+              Mobile Developer
+            </p>
+            <Image
+              src={ProfilePicture}
+              alt="profile picture"
+              width={150}
+              height={150}
+              className="object-cover w-full h-3/4 shadow-xl rounded-lg mt-3"
+            />
+          </div>
+
+          <div className="flex flex-col items-center bg-slate-200 p-4 rounded-lg shadow-md h-72 mt-10">
+            <h3 className="text-slate-600 text-center font-semibold mb-2">
+              James Samerton
+            </h3>
+            <p className="text-slate-500 text-sm font-semibold">
+              Mobile Developer
+            </p>
+            <Image
+              src={ProfilePicture}
+              alt="profile picture"
+              width={150}
+              height={150}
+              className="object-cover w-full h-3/4 shadow-xl rounded-lg mt-3"
+            />
+          </div>
+
+          <div className="flex flex-col items-center bg-slate-300 p-4 rounded-lg shadow-md h-80">
+            <h3 className="text-slate-600 text-center font-semibold mb-2">
+              James Samerton
+            </h3>
+            <p className="text-slate-500 text-sm font-semibold">
+              Mobile Developer
+            </p>
+            <Image
+              src={ProfilePicture}
+              alt="profile picture"
+              width={200}
+              height={200}
+              className="object-cover w-full h-3/4 shadow-2xl rounded-lg mt-5"
+            />
           </div>
         </div>
-        <h3>SLIKAA</h3>
       </div>
     </>
   );
