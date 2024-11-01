@@ -5,7 +5,6 @@ import { redirect } from 'next/navigation';
 import prisma from '../utils/db';
 import Image from 'next/image';
 import Link from 'next/link';
-import EducationModal from '../components/EducationModal';
 
 async function getData(userId: string) {
   const data = await prisma.profile.findMany({
@@ -140,6 +139,11 @@ const ProfilePage = async () => {
 
               {/* Experience Section */}
               <div className="w-full bg-gray-50 p-4 rounded-lg shadow-inner mb-6">
+                <div className="flex items-center justify-between">
+                  <h3 className="text-lg font-medium text-gray-700 mb-2">
+                    Experience
+                  </h3>
+                </div>
                 {experienceData.length > 0 ? (
                   experienceData.map((exp) => (
                     <div
@@ -156,7 +160,7 @@ const ProfilePage = async () => {
                         </p>
                       </div>
 
-                      <Link href={`/dashboard/${exp.id}`}>
+                      <Link href={`/dashboard/experience/${exp.id}`}>
                         <button className="text-blue-500 text-sm hover:underline">
                           Edit
                         </button>
@@ -191,7 +195,7 @@ const ProfilePage = async () => {
                         </p>
                       </div>
                       {/* Edit Education Button */}
-                      <Link href={`/dashboard/${eduItem.id}`}>
+                      <Link href={`/dashboard/education/${eduItem.id}`}>
                         <button className="text-blue-500 text-sm hover:underline">
                           Edit
                         </button>
