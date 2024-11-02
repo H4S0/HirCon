@@ -10,6 +10,12 @@ import { Label } from '@/components/ui/label';
 import { Select } from '@radix-ui/react-select';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import {
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 
 interface Params {
   educationId: string;
@@ -87,12 +93,17 @@ const EditEducationPage = async ({ params }: { params: Params }) => {
                   required
                   className="mt-1"
                 >
-                  <option value="HIGH_SCHOOL_DIPLOMA">
-                    High School Diploma
-                  </option>
-                  <option value="BACHELORS">Bachelors</option>
-                  <option value="MASTERS">Masters</option>
-                  <option value="DOCTORATE">Doctorate</option>
+                  <SelectTrigger>
+                    <SelectValue placeholder="degree" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="HIGH_SCHOOL_DIPLOMA">
+                      High School Diploma
+                    </SelectItem>
+                    <SelectItem value="BACHELORS">Bachelor's Degree</SelectItem>
+                    <SelectItem value="MASTERS">Master's Degree</SelectItem>
+                    <SelectItem value="DOCTORATE">Doctorate Degree</SelectItem>
+                  </SelectContent>
                 </Select>
               </div>
             </form>
