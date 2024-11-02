@@ -136,3 +136,36 @@ export async function CreateExperience(prevState: any, formData: FormData) {
   });
   return redirect('/dashboard/profileediting');
 }
+
+async function updateExperience(prevState: any, formData: FormData) {
+  const { getUser } = getKindeServerSession();
+  const user = getUser();
+
+  if (!user) {
+    return redirect('/api/auth/login');
+  }
+
+  const submission = parseWithZod(formData, {
+    schema: experienceSchema,
+  });
+
+  if (submission.status !== 'success') {
+    return submission.reply();
+  }
+
+  const data = await prisma.experience.update({
+    where: {
+      profileId: (await user).id,
+      id: formData.get('experienceId') as string,
+    },
+    data: {
+      company: submission.value.company,
+      role: submission.value.role,
+      startDate: submission.value.startYear,
+      endDate: submission.value.endYear,
+      roleDescription: submission.value.roleDescription,
+    },
+  });
+}
+
+async function updateEducation() {}
