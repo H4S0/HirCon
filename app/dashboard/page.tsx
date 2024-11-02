@@ -84,7 +84,7 @@ const ProfilePage = async () => {
       {profileData.map((item) => (
         <div
           key={item.id}
-          className="max-w-4xl mx-auto bg-white p-6 shadow-md rounded-lg mb-10"
+          className="max-w-4xl mx-auto bg-white p-6 shadow-md rounded-lg mb-10 mt-10"
         >
           {userData ? (
             <div className="flex flex-col items-center gap-6">
@@ -95,7 +95,7 @@ const ProfilePage = async () => {
                   alt="Profile Image"
                   width={100}
                   height={100}
-                  className="rounded-full border-2 border-gray-300"
+                  className="rounded-full border-2 border-gray-300 shadow-lg"
                 />
                 <div>
                   <h2 className="text-2xl font-semibold text-gray-800">
@@ -114,7 +114,7 @@ const ProfilePage = async () => {
               </div>
 
               {/* About Section */}
-              <div className="w-full bg-gray-50 p-4 rounded-lg shadow-inner mb-6">
+              <div className="w-full bg-gray-100 p-6 rounded-lg shadow-inner mb-6">
                 <h3 className="text-lg font-medium text-gray-700 mb-2">
                   About
                 </h3>
@@ -122,7 +122,7 @@ const ProfilePage = async () => {
               </div>
 
               {/* Skills Section */}
-              <div className="w-full bg-gray-50 p-4 rounded-lg shadow-inner mb-6">
+              <div className="w-full bg-gray-100 p-6 rounded-lg shadow-inner mb-6">
                 <h3 className="text-lg font-medium text-gray-700 mb-2">
                   Skills
                 </h3>
@@ -132,13 +132,18 @@ const ProfilePage = async () => {
                       Make sure to add some skills at profile page !!
                     </p>
                   ) : (
-                    skill
+                    <span
+                      key={skill}
+                      className="inline-block bg-blue-100 text-blue-600 px-2 py-1 rounded-md text-sm mr-2 mb-2"
+                    >
+                      {skill}
+                    </span>
                   )
                 )}
               </div>
 
               {/* Experience Section */}
-              <div className="w-full bg-gray-50 p-4 rounded-lg shadow-inner mb-6">
+              <div className="w-full bg-gray-100 p-6 rounded-lg shadow-inner mb-6">
                 <div className="flex items-center justify-between">
                   <h3 className="text-lg font-medium text-gray-700 mb-2">
                     Experience
@@ -159,7 +164,6 @@ const ProfilePage = async () => {
                           {exp.startDate} - {exp.endDate}
                         </p>
                       </div>
-
                       <Link href={`/dashboard/experience/${exp.id}`}>
                         <button className="text-blue-500 text-sm hover:underline">
                           Edit
@@ -173,7 +177,7 @@ const ProfilePage = async () => {
               </div>
 
               {/* Education Section */}
-              <div className="w-full bg-gray-50 p-4 rounded-lg shadow-inner mb-6">
+              <div className="w-full bg-gray-100 p-6 rounded-lg shadow-inner mb-6">
                 <div className="flex items-center justify-between">
                   <h3 className="text-lg font-medium text-gray-700 mb-2">
                     Education
@@ -194,7 +198,6 @@ const ProfilePage = async () => {
                           {eduItem.startDate} - {eduItem.endDate}
                         </p>
                       </div>
-                      {/* Edit Education Button */}
                       <Link href={`/dashboard/education/${eduItem.id}`}>
                         <button className="text-blue-500 text-sm hover:underline">
                           Edit
