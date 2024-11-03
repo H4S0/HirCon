@@ -29,7 +29,7 @@ const EditExperiencePage = async ({ params }: { params: Params }) => {
   return (
     <div className="flex justify-center items-center min-h-screen p-4">
       <ExperienceForm
-        experienceData={experienceData}
+        data={experienceData}
         experienceId={experienceId}
       />
     </div>
