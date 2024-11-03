@@ -1,3 +1,7 @@
+'use client';
+
+import { updateExperience } from '@/app/actions';
+import { experienceSchema } from '@/app/utils/zodSchemas';
 import { Button } from '@/components/ui/button';
 import {
   Card,
@@ -8,7 +12,9 @@ import {
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
-import React from 'react';
+import { useForm } from '@conform-to/react';
+import { parseWithZod } from '@conform-to/zod';
+import React, { useActionState, useState } from 'react';
 
 interface ExperienceDataProps {
   company: string;
@@ -19,11 +25,33 @@ interface ExperienceDataProps {
 }
 
 const ExperienceForm = ({
-  experienceData,
+  data,
   experienceId,
 }: {
-  experienceData: ExperienceDataProps;
+  data: ExperienceDataProps;
+  experienceId: string;
 }) => {
+  const [company, setCompany] = useState<string | undefined>(data.company);
+  const [role, setRole] = useState<string | undefined>(data.role);
+  const [roleDescription, setRoleDescripiton] = useState<string | undefined>(
+    data.roleDescription
+  );
+  const [startDate, setStartDate] = useState<string | undefined>(
+    data.startDate
+  );
+  const [endDate, setEndDate] = useState<string | undefined>(data.endDate);
+  const [lastResult, action] = useActionState(updateExperience, undefined);
+  const [form, fields] = useForm({
+    lastResult,
+    onValidate({ formData }) {
+      return parseWithZod(formData, {
+        schema: experienceSchema,
+      });
+    },
+    shouldValidate: 'onBlur',
+    shouldRevalidate: 'onInput',
+  });
+
   return (
     <>
       <Card className="max-w-md w-full shadow-lg">
@@ -31,19 +59,20 @@ const ExperienceForm = ({
           <h1 className="text-lg font-bold">Edit Experience</h1>
         </CardHeader>
         <CardContent>
-          {experienceData ? (
-            <form id="edit-experience-form">
+          {data ? (
+            <form id={form.id} onSubmit={form.onSubmit} action={action}>
               <input type="hidden" name="experienceId" value={experienceId} />
 
               {/* Company/Institution */}
               <div className="mb-4">
                 <Label htmlFor="company">Company/Institution:</Label>
                 <Input
-                  id="company"
-                  name="company"
-                  defaultValue={experienceData.company}
+                  id={fields.company.name}
+                  name={fields.company.name}
+                  defaultValue={fields.company.initialValue}
                   required
                   className="mt-1"
+                  value={company}
                 />
               </div>
 
@@ -51,11 +80,12 @@ const ExperienceForm = ({
               <div className="mb-4">
                 <Label htmlFor="role">Role:</Label>
                 <Input
-                  id="role"
-                  name="role"
-                  defaultValue={experienceData.role}
+                  id={fields.role.name}
+                  name={fields.role.name}
+                  defaultValue={fields.role.initialValue}
                   required
                   className="mt-1"
+                  value={role}
                 />
               </div>
 
@@ -63,12 +93,13 @@ const ExperienceForm = ({
               <div className="mb-4">
                 <Label htmlFor="roleDescription">Role Description:</Label>
                 <Textarea
-                  id="roleDescription"
-                  name="roleDescription"
-                  defaultValue={experienceData.roleDescription}
+                  id={fields.roleDescription.name}
+                  name={fields.roleDescription.name}
+                  defaultValue={fields.roleDescription.initialValue}
                   required
                   className="mt-1"
                   rows={4}
+                  value={roleDescription}
                 />
               </div>
 
@@ -76,12 +107,13 @@ const ExperienceForm = ({
               <div className="mb-4">
                 <Label htmlFor="startDate">Start Date:</Label>
                 <Input
-                  id="startDate"
-                  name="startDate"
+                  id={fields.startYear.name}
+                  name={fields.startYear.name}
                   type="date"
-                  defaultValue={experienceData.startDate}
+                  defaultValue={fields.startYear.initialValue}
                   required
                   className="mt-1"
+                  value={startDate}
                 />
               </div>
 
@@ -89,12 +121,13 @@ const ExperienceForm = ({
               <div className="mb-4">
                 <Label htmlFor="endDate">End Date:</Label>
                 <Input
-                  id="endDate"
-                  name="endDate"
+                  id={fields.endYear.name}
+                  name={fields.endYear.name}
                   type="date"
-                  defaultValue={experienceData.endDate}
+                  defaultValue={fields.endYear.initialValue}
                   required
                   className="mt-1"
+                  value={endDate}
                 />
               </div>
             </form>
