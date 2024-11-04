@@ -1,7 +1,6 @@
 'use server';
 
 import { parseWithZod } from '@conform-to/zod';
-import { getKindeServerSession } from '@kinde-oss/kinde-auth-nextjs/server';
 import prisma from './utils/db';
 import {
   educationSchema,
@@ -9,15 +8,10 @@ import {
   profileSchema,
 } from './utils/zodSchemas';
 import { redirect } from 'next/navigation';
-import { ObjectId } from 'mongodb';
+import { requireUser } from './utils/requireUser';
 
 export async function UpdateProfile(prevState: any, formData: FormData) {
-  const { getUser } = getKindeServerSession();
-  const user = await getUser();
-
-  if (!user) {
-    return redirect('/api/auth/login');
-  }
+  const user = requireUser();
 
   const submission = parseWithZod(formData, {
     schema: profileSchema,
@@ -61,12 +55,7 @@ export async function UpdateProfile(prevState: any, formData: FormData) {
 }
 
 export async function CreateEducation(prevState: any, formData: FormData) {
-  const { getUser } = getKindeServerSession();
-  const user = await getUser();
-
-  if (!user) {
-    return redirect('/api/auth/login');
-  }
+  const user = requireUser();
 
   const submission = parseWithZod(formData, {
     schema: educationSchema,
@@ -100,12 +89,7 @@ export async function CreateEducation(prevState: any, formData: FormData) {
 }
 
 export async function CreateExperience(prevState: any, formData: FormData) {
-  const { getUser } = getKindeServerSession();
-  const user = getUser();
-
-  if (!user) {
-    return redirect('/api/auth/login');
-  }
+  const user = requireUser();
 
   const submission = parseWithZod(formData, {
     schema: experienceSchema,
@@ -139,12 +123,7 @@ export async function CreateExperience(prevState: any, formData: FormData) {
 }
 
 export async function updateExperience(prevState: any, formData: FormData) {
-  const { getUser } = getKindeServerSession();
-  const user = getUser();
-
-  if (!user) {
-    return redirect('/api/auth/login');
-  }
+  const user = requireUser();
 
   const submission = parseWithZod(formData, { schema: experienceSchema });
   if (submission.status !== 'success') {
@@ -171,4 +150,4 @@ export async function updateExperience(prevState: any, formData: FormData) {
   return redirect(`/dashboard/experience/${experienceId}`);
 }
 
-async function updateEducation() {}
+export async function updateEducation(prevState: any, formData: FormData) {}
