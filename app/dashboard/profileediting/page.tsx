@@ -27,6 +27,8 @@ import EducationModal from '@/app/components/EducationModal';
 import ExperienceModal from '@/app/components/ExperienceModal';
 import { Textarea } from '@/components/ui/textarea';
 import DashboardNavbar from '@/app/components/DashboardNavbar';
+import { useKindeBrowserClient } from '@kinde-oss/kinde-auth-nextjs';
+import { redirect } from 'next/navigation';
 
 const ProfileUpdating = () => {
   const [skills, setSkills] = useState<string[]>([]);
@@ -43,6 +45,12 @@ const ProfileUpdating = () => {
     shouldValidate: 'onSubmit',
     shouldRevalidate: 'onSubmit',
   });
+
+  const { isAuthenticated } = useKindeBrowserClient();
+
+  if (!isAuthenticated) {
+    return redirect('/api/auth/login');
+  }
 
   const addSkill = () => {
     if (inputSkill && !skills.includes(inputSkill)) {
@@ -90,7 +98,7 @@ const ProfileUpdating = () => {
                   <Label className="font-semibold">Your current status</Label>
                   <Select id="status" name="status">
                     <SelectTrigger className="w-[180px]">
-                      <SelectValue placeholder="Theme" />
+                      <SelectValue placeholder="Add your status" />
                     </SelectTrigger>
                     <SelectContent>
                       <SelectItem value="EMPLOYED">Employed</SelectItem>
