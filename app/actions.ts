@@ -9,6 +9,7 @@ import {
   profileSchema,
 } from './utils/zodSchemas';
 import { redirect } from 'next/navigation';
+import { ObjectId } from 'mongodb';
 
 export async function UpdateProfile(prevState: any, formData: FormData) {
   const { getUser } = getKindeServerSession();
@@ -137,7 +138,7 @@ export async function CreateExperience(prevState: any, formData: FormData) {
   return redirect('/dashboard/profileediting');
 }
 
-async function updateExperience(prevState: any, formData: FormData) {
+export async function updateExperience(prevState: any, formData: FormData) {
   const { getUser } = getKindeServerSession();
   const user = getUser();
 
@@ -145,18 +146,18 @@ async function updateExperience(prevState: any, formData: FormData) {
     return redirect('/api/auth/login');
   }
 
-  const submission = parseWithZod(formData, {
-    schema: experienceSchema,
-  });
-
+  const submission = parseWithZod(formData, { schema: experienceSchema });
   if (submission.status !== 'success') {
     return submission.reply();
   }
 
+  const profileId = user.id;
+  const experienceId = formData.get('experienceId') as string;
+
   const data = await prisma.experience.update({
     where: {
-      profileId: (await user).id,
-      id: formData.get('experienceId') as string,
+      profileId,
+      id: experienceId,
     },
     data: {
       company: submission.value.company,
@@ -166,6 +167,8 @@ async function updateExperience(prevState: any, formData: FormData) {
       roleDescription: submission.value.roleDescription,
     },
   });
+
+  return redirect(`/dashboard/experience/${experienceId}`);
 }
 
 async function updateEducation() {}
