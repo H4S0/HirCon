@@ -58,7 +58,7 @@ const EducationForm = ({
         </CardHeader>
         <CardContent>
           {data ? (
-            <form id="edit-education-form">
+            <form id={form.id} onSubmit={form.onSubmit} action={action}>
               <input type="hidden" name="id" value={educationId} />
 
               <div className="mb-4">
@@ -78,7 +78,7 @@ const EducationForm = ({
                   id="startDate"
                   name="startDate"
                   type="date"
-                  defaultValue={startYear} // Format the start date
+                  defaultValue={startYear}
                   required
                   className="mt-1"
                 />
@@ -90,7 +90,7 @@ const EducationForm = ({
                   id="endDate"
                   name="endDate"
                   type="date"
-                  defaultValue={endYear} // Format the end date
+                  defaultValue={endYear}
                   required
                   className="mt-1"
                 />
