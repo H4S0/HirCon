@@ -7,6 +7,8 @@ const DegreeEnum = z.enum([
   'DOCTORATE',
 ]);
 
+const statusEnum = z.enum(['EMPLOYED', 'UNEMPLOYED', 'OPENTOWORK']);
+
 export const educationSchema = z.object({
   institution: z.string().min(1, 'Institution is required'),
   degree: DegreeEnum,
@@ -26,4 +28,7 @@ export const profileSchema = z.object({
   description: z.string().min(1, 'Description is required'),
   currentStatus: z.enum(['opentowork', 'employed', 'unemployed']).optional(),
   skills: z.array(z.string()).optional(),
+  location: z.string().min(2).max(50),
+  contact: z.string().email({ message: 'Invalid email address' }),
+  status: statusEnum,
 });
