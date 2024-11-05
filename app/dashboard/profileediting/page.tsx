@@ -134,7 +134,25 @@ const ProfileUpdating = () => {
                     </Button>
                     <p>{fields.skills.errors}</p>
                   </div>
+                  <div className="mt-2">
+                    {skills.map((skill, index) => (
+                      <span
+                        key={index}
+                        className="inline-flex items-center bg-gray-200 text-gray-800 px-3 py-1 rounded-full m-1"
+                      >
+                        {skill}
+                        <button
+                          type="button"
+                          className="ml-2 text-red-500 hover:text-red-700"
+                          onClick={() => removeSkill(skill)}
+                        >
+                          &times;
+                        </button>
+                      </span>
+                    ))}
+                  </div>
                 </div>
+
                 <div className="grid gap-3">
                   <Label className="font-semibold">Type your Location</Label>
                   <Input
@@ -146,23 +164,19 @@ const ProfileUpdating = () => {
                   />
                   <p>{fields.location.errors}</p>
                 </div>
-                <div className="mt-2">
-                  {skills.map((skill, index) => (
-                    <span
-                      key={index}
-                      className="inline-flex items-center bg-gray-200 text-gray-800 px-3 py-1 rounded-full m-1"
-                    >
-                      {skill}
-                      <button
-                        type="button"
-                        className="ml-2 text-red-500 hover:text-red-700"
-                        onClick={() => removeSkill(skill)}
-                      >
-                        &times;
-                      </button>
-                    </span>
-                  ))}
+
+                <div className="grid gap-3">
+                  <Label className="font-semibold">Add your contact mail</Label>
+                  <Input
+                    placeholder="E-mail"
+                    key={fields.contact.key}
+                    name={fields.contact.name}
+                    defaultValue={fields.contact.initialValue}
+                    required
+                  />
+                  <p>{fields.contact.errors}</p>
                 </div>
+
                 <div>
                   <EducationModal />
                 </div>
