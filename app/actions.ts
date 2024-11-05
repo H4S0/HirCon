@@ -23,7 +23,7 @@ export async function UpdateProfile(prevState: any, formData: FormData) {
 
   const existingProfile = await prisma.profile.findUnique({
     where: {
-      userId: user.id,
+      userId: (await user).id,
     },
   });
 
@@ -36,6 +36,7 @@ export async function UpdateProfile(prevState: any, formData: FormData) {
         description: submission.value.description,
         skills: submission.value.skills,
         location: submission.value.location,
+        contact: submission.value.contact,
         employedStatus: submission.value.status,
       },
     });
@@ -46,7 +47,8 @@ export async function UpdateProfile(prevState: any, formData: FormData) {
         skills: submission.value.skills,
         location: submission.value.location,
         employedStatus: submission.value.status,
-        userId: user.id,
+        contact: submission.value.contact,
+        userId: (await user).id,
       },
     });
   }
