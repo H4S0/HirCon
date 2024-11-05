@@ -152,4 +152,31 @@ export async function updateExperience(prevState: any, formData: FormData) {
   return redirect(`/dashboard/experience/${experienceId}`);
 }
 
-export async function updateEducation(prevState: any, formData: FormData) {}
+export async function updateEducation(prevState: any, formData: FormData) {
+  const user = requireUser();
+
+  const submission = parseWithZod(formData, { schema: educationSchema });
+
+  if (submission.status !== 'success') {
+    return submission.reply();
+  }
+
+  const profileId = user.id;
+  const educationId = formData.get('educationId') as string;
+
+  const data = await prisma.education.update({
+    where: {
+      profileId,
+      id: educationId,
+    },
+    data: {
+      institution: submission.value.institution,
+      degree: submission.value.degree,
+      startDate: submission.value.startYear,
+      endDate: submission.value.endYear,
+    },
+  });
+
+  return redirect(`/dashboard/education/${educationId}`);
+}
+
