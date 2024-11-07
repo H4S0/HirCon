@@ -9,6 +9,8 @@ import {
 } from './utils/zodSchemas';
 import { redirect } from 'next/navigation';
 import { requireUser } from './utils/requireUser';
+import { getKindeServerSession } from '@kinde-oss/kinde-auth-nextjs/server';
+import { cookies } from 'next/headers';
 
 export async function UpdateProfile(prevState: any, formData: FormData) {
   const user = requireUser();
@@ -153,8 +155,12 @@ export async function updateExperience(prevState: any, formData: FormData) {
 }
 
 export async function updateEducation(prevState: any, formData: FormData) {
-  const user = requireUser();
+  const { getUser } = getKindeServerSession();
+  const user = getUser();
 
+  if (!user) {
+    return redirect('/api/auth/login');
+  }
   const submission = parseWithZod(formData, { schema: educationSchema });
 
   if (submission.status !== 'success') {
@@ -172,11 +178,10 @@ export async function updateEducation(prevState: any, formData: FormData) {
     data: {
       institution: submission.value.institution,
       degree: submission.value.degree,
-      startDate: submission.value.startYear,
-      endDate: submission.value.endYear,
+      startDate: submission.value.startYear, 
+      endDate: submission.value.endYear, 
     },
   });
 
-  return redirect(`/dashboard/education/${educationId}`);
+  return redirect(`/dashboard`);
 }
-
