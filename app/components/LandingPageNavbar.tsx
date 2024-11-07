@@ -13,8 +13,9 @@ import { Menu, X } from 'lucide-react';
 import { useKindeBrowserClient } from '@kinde-oss/kinde-auth-nextjs';
 
 const Navbar = () => {
-  const { isAuthenticated, isLoading } = useKindeBrowserClient();
+  const { getUser, isAuthenticated, isLoading } = useKindeBrowserClient();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const user = getUser();
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
@@ -97,12 +98,23 @@ const Navbar = () => {
           <Link href={'/job'} onClick={toggleMenu} className="hover:underline">
             Find a job
           </Link>
-          <RegisterLink>
-            <Button onClick={toggleMenu}>Register</Button>
-          </RegisterLink>
-          <LoginLink>
-            <Button onClick={toggleMenu}>Login</Button>
-          </LoginLink>
+          <p className="font-semibold">
+            Welcome {isLoading ? 'loading...' : user?.given_name}
+          </p>
+          {isAuthenticated ? (
+            <LogoutLink>
+              <Button onClick={toggleMenu}>Logout</Button>
+            </LogoutLink>
+          ) : (
+            <>
+              <Link href="/register">
+                <Button onClick={toggleMenu}>Register</Button>
+              </Link>
+              <Link href="/login">
+                <Button onClick={toggleMenu}>Login</Button>
+              </Link>
+            </>
+          )}
         </div>
       </div>
     </>
