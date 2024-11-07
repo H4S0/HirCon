@@ -18,9 +18,40 @@ model User {
   email        String  @unique
   profileImage String?
 
-  profile Profile? @relation(name: "UserProfile")
+  profile   Profile?  @relation(name: "UserProfile")
+  companies Company[] @relation(name: "UserCompanies")
 
   createdAt DateTime @default(now())
+}
+
+model Company {
+  id          String     @id @default(auto()) @map("_id") @db.ObjectId
+  name        String
+  description String
+  location    String
+  website     String
+  foundedDate DateTime
+  jobAlerts   JobAlert[] // One-to-many relation with JobAlert
+
+  ownerId String @db.ObjectId // Foreign key to the User model
+  owner   User   @relation(name: "UserCompanies", fields: [ownerId], references: [id])
+
+  createdAt DateTime @default(now())
+}
+
+model JobAlert {
+  id             String  @id @default(auto()) @map("_id") @db.ObjectId
+  jobTitle       String // Job title/role
+  salary         Float // Salary for the position
+  jobDescription String // Description of the job
+  location       String // Job location (city, country)
+  remote         Boolean // Whether the job is remote or not
+  isActive       Boolean @default(true) // Whether the job alert is active or not
+  jobRole        String // Job role (e.g., Frontend Developer, Backend Developer, etc.)
+  companyId      String  @db.ObjectId // Foreign key to the Company model
+  company        Company @relation(fields: [companyId], references: [id])
+
+  createdAt DateTime @default(now()) // Timestamp of when the job alert was created
 }
 
 model Profile {
