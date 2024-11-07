@@ -40,100 +40,114 @@ const EducationForm = ({
   const [degree, setDegree] = useState(data.degree);
   const [startYear, setStartYear] = useState(data.startDate);
   const [endYear, setEndYear] = useState(data.endDate);
-  const [lastResult, action] = useActionState(updateEducation, undefined);
+  const [lastResult, action] = useActionState(updateEducation, undefined); // action state
+
   const [form, fields] = useForm({
     lastResult,
     onValidate({ formData }) {
-      parseWithZod(formData, { schema: educationSchema });
+      return parseWithZod(formData, { schema: educationSchema });
     },
     shouldValidate: 'onBlur',
     shouldRevalidate: 'onInput',
   });
 
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    const formData = new FormData(e.currentTarget);
+
+    const result = await updateEducation(undefined, formData);
+  };
+
   return (
-    <>
-      <Card className="max-w-md w-full shadow-lg">
-        <CardHeader>
-          <h1 className="text-lg font-bold">Edit Education</h1>
-        </CardHeader>
-        <CardContent>
-          {data ? (
-            <form id={form.id} onSubmit={form.onSubmit} action={action}>
-              <input type="hidden" name="id" value={educationId} />
+    <Card className="max-w-md w-full shadow-lg">
+      <CardHeader>
+        <h1 className="text-lg font-bold">Edit Education</h1>
+      </CardHeader>
+      <CardContent>
+        {data ? (
+          <form id={form.id} onSubmit={handleSubmit} action={action}>
+            <input type="hidden" name="educationId" value={educationId} />
 
-              <div className="mb-4">
-                <Label htmlFor="institution">Institution:</Label>
-                <Input
-                  id="institution"
-                  name="institution"
-                  defaultValue={institution}
-                  required
-                  className="mt-1"
-                />
-              </div>
+            <div className="mb-4">
+              <Label htmlFor="institution">Institution:</Label>
+              <Input
+                id={fields.institution.name}
+                name={fields.institution.name}
+                defaultValue={institution}
+                required
+                className="mt-1"
+                onChange={(e) => setInstitution(e.target.value)}
+              />
+            </div>
 
-              <div className="mb-4">
-                <Label htmlFor="startDate">Start Date:</Label>
-                <Input
-                  id="startDate"
-                  name="startDate"
-                  type="date"
-                  defaultValue={startYear}
-                  required
-                  className="mt-1"
-                />
-              </div>
+            <div className="mb-4">
+              <Label htmlFor="startDate">Start Date:</Label>
+              <Input
+                id={fields.startYear.name}
+                name={fields.startYear.name}
+                type="date"
+                value={startYear}
+                required
+                className="mt-1"
+                onChange={(e) => setStartYear(e.target.value)}
+              />
+            </div>
 
-              <div className="mb-4">
-                <Label htmlFor="endDate">End Date:</Label>
-                <Input
-                  id="endDate"
-                  name="endDate"
-                  type="date"
-                  defaultValue={endYear}
-                  required
-                  className="mt-1"
-                />
-              </div>
+            <div className="mb-4">
+              <Label htmlFor="endDate">End Date:</Label>
+              <Input
+                id={fields.endYear.name}
+                name={fields.endYear.name}
+                type="date"
+                value={endYear}
+                required
+                className="mt-1"
+                onChange={(e) => setEndYear(e.target.value)}
+              />
+            </div>
 
-              <div className="mb-4">
-                <Label htmlFor="degree">Degree:</Label>
-                <Select
-                  id="degree"
-                  name="degree"
-                  defaultValue={degree}
-                  required
-                  className="mt-1"
-                >
-                  <SelectTrigger>
-                    <SelectValue placeholder="degree" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="HIGH_SCHOOL_DIPLOMA">
-                      High School Diploma
-                    </SelectItem>
-                    <SelectItem value="BACHELORS">
-                      Bachelor&apos;s Degree
-                    </SelectItem>
-                    <SelectItem value="MASTERS">
-                      Master&apos;s Degree
-                    </SelectItem>
-                    <SelectItem value="DOCTORATE">Doctorate Degree</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-            </form>
-          ) : (
-            <p>No education details found.</p>
-          )}
-        </CardContent>
-        <CardFooter>
-          <Button type="submit" form="edit-education-form" className="w-full">
-            Save
-          </Button>
-        </CardFooter>
-      </Card>
-    </>
+            <div className="mb-4">
+              <Label htmlFor="degree">Degree:</Label>
+              <Select
+                id={fields.degree.name}
+                name={fields.degree.name}
+                defaultValue={degree}
+                required
+                className="mt-1"
+                onValueChange={(value) => setDegree(value)}
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="Select your degree" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="HIGH_SCHOOL_DIPLOMA">
+                    High School Diploma
+                  </SelectItem>
+                  <SelectItem value="BACHELORS">
+                    Bachelor&apos;s Degree
+                  </SelectItem>
+                  <SelectItem value="MASTERS">Master&apos;s Degree</SelectItem>
+                  <SelectItem value="DOCTORATE">Doctorate Degree</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+
+            <CardFooter>
+              <Button
+                type="submit"
+                form="edit-education-form"
+                className="w-full"
+              >
+                Save
+              </Button>
+            </CardFooter>
+          </form>
+        ) : (
+          <p>No education details found.</p>
+        )}
+      </CardContent>
+    </Card>
   );
 };
 
