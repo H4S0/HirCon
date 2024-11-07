@@ -22,8 +22,10 @@ const Hero = () => {
           </Button>
         </div>
 
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-8 max-w-5xl mx-auto items-end">
-          <div className="flex flex-col items-center bg-slate-300 p-4 rounded-lg shadow-md h-80">
+        {/* Image Card Grid */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8 max-w-5xl mx-auto items-end py-10">
+          {/* Left Side Card (Taller) */}
+          <div className="flex flex-col items-center bg-slate-300 p-4 rounded-lg shadow-md h-full">
             <h3 className="text-slate-600 text-center font-semibold mb-2">
               James Samerton
             </h3>
@@ -39,7 +41,8 @@ const Hero = () => {
             />
           </div>
 
-          <div className="flex flex-col items-center bg-slate-200 p-4 rounded-lg shadow-md h-72 mt-10">
+          {/* Middle Card 1 (Shorter with top padding) */}
+          <div className="flex flex-col items-center bg-slate-200 p-4 rounded-lg shadow-md h-full">
             <h3 className="text-slate-600 text-center font-semibold mb-2">
               James Samerton
             </h3>
@@ -55,7 +58,8 @@ const Hero = () => {
             />
           </div>
 
-          <div className="flex flex-col items-center bg-slate-200 p-4 rounded-lg shadow-md h-72 mt-10">
+          {/* Middle Card 2 (Shorter with top padding) */}
+          <div className="flex flex-col items-center bg-slate-200 p-4 rounded-lg shadow-md h-full">
             <h3 className="text-slate-600 text-center font-semibold mb-2">
               James Samerton
             </h3>
@@ -71,7 +75,8 @@ const Hero = () => {
             />
           </div>
 
-          <div className="flex flex-col items-center bg-slate-300 p-4 rounded-lg shadow-md h-80">
+          {/* Right Side Card (Taller) */}
+          <div className="flex flex-col items-center bg-slate-300 p-4 rounded-lg shadow-md h-full">
             <h3 className="text-slate-600 text-center font-semibold mb-2">
               James Samerton
             </h3>
