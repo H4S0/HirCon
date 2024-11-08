@@ -91,6 +91,7 @@ const EducationForm = ({
                 required
                 className="mt-1"
                 onChange={(e) => setStartYear(e.target.value)}
+                onKeyDown={(e) => e.key === 'Enter' && e.preventDefault()} // Prevent Enter key from submitting
               />
             </div>
 
@@ -104,6 +105,7 @@ const EducationForm = ({
                 required
                 className="mt-1"
                 onChange={(e) => setEndYear(e.target.value)}
+                onKeyDown={(e) => e.key === 'Enter' && e.preventDefault()} // Prevent Enter key from submitting
               />
             </div>
 
@@ -134,11 +136,7 @@ const EducationForm = ({
             </div>
 
             <CardFooter>
-              <Button
-                type="submit"
-                form="edit-education-form"
-                className="w-full"
-              >
+              <Button type="submit" className="w-full">
                 Save
               </Button>
             </CardFooter>
