@@ -6,13 +6,13 @@ import prisma from '../utils/db';
 import Image from 'next/image';
 import Link from 'next/link';
 
-async function getData(userId) {
+async function getData(userId: string) {
   return prisma.profile.findMany({
     where: { userId },
   });
 }
 
-async function getEducationData(profileId) {
+async function getEducationData(profileId: string) {
   return prisma.education.findMany({
     where: { profileId },
     select: {
@@ -25,7 +25,7 @@ async function getEducationData(profileId) {
   });
 }
 
-async function getUserData(kindeId) {
+async function getUserData(kindeId: string) {
   return prisma.user.findUnique({
     where: { kindeId },
     select: {
@@ -37,7 +37,7 @@ async function getUserData(kindeId) {
   });
 }
 
-async function getUserExperience(profileId) {
+async function getUserExperience(profileId: string) {
   return prisma.experience.findMany({
     where: { profileId },
     select: {
