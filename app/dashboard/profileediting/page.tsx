@@ -1,196 +1,43 @@
-'use client';
+import React from 'react';
 
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
-
-import React, { useState } from 'react';
-import { useForm } from '@conform-to/react';
-import { profileSchema } from '@/app/utils/zodSchemas';
-import { parseWithZod } from '@conform-to/zod';
-import { UpdateProfile } from '@/app/actions';
-import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card';
-import { Label } from '@/components/ui/label';
-import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
-import EducationModal from '@/app/components/EducationModal';
-import ExperienceModal from '@/app/components/ExperienceModal';
-import { Textarea } from '@/components/ui/textarea';
 import DashboardNavbar from '@/app/components/DashboardNavbar';
+import PorfileEditingForm from '@/app/components/forms/PorfileEditingForm';
+import prisma from '@/app/utils/db';
+import { getKindeServerSession } from '@kinde-oss/kinde-auth-nextjs/server';
+import { redirect } from 'next/navigation';
 
-const ProfileUpdating = () => {
-  const [skills, setSkills] = useState<string[]>([]);
-  const [inputSkill, setInputSkill] = useState('');
-  const [lastResult, action] = useState();
-
-  const [form, fields] = useForm({
-    lastResult,
-    onValidate({ formData }) {
-      return parseWithZod(formData, {
-        schema: profileSchema,
-      });
+async function getData(userId: string) {
+  const data = await prisma.profile.findUnique({
+    where: {
+      userId: userId,
     },
-    shouldValidate: 'onSubmit',
-    shouldRevalidate: 'onSubmit',
+    select: {
+      description: true,
+      skills: true,
+      location: true,
+      contact: true,
+      employedStatus: true,
+    },
   });
 
-  const addSkill = () => {
-    if (inputSkill && !skills.includes(inputSkill)) {
-      setSkills([...skills, inputSkill]);
-      setInputSkill('');
-    }
-  };
+  return data;
+}
 
-  const removeSkill = (skillToRemove: string) => {
-    setSkills(skills.filter((skill) => skill !== skillToRemove));
-  };
+const ProfileUpdating = async () => {
+  const { isAuthenticated, getUser } = getKindeServerSession();
+  const isUserAuthenticated = await isAuthenticated();
+  const user = await getUser();
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault(); // Prevent default form submission
+  if (!isUserAuthenticated) {
+    return redirect('/api/auth/login');
+  }
 
-    const formData = new FormData(e.currentTarget);
-    formData.append('skills', JSON.stringify(skills));
-
-    const prevState = lastResult;
-
-    // Explicitly submit only when the button is clicked
-    await UpdateProfile(prevState, formData);
-  };
+  const profileData = await getData(user.id);
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-24">
       <DashboardNavbar />
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-24 mt-10">
-        <Card>
-          <CardHeader>
-            <CardTitle>
-              <div className="grid gap-3">
-                <h2>Setup profile</h2>
-                <p className="font-semibold">
-                  Click the submit button below once you're done...
-                </p>
-              </div>
-            </CardTitle>
-          </CardHeader>
-
-          <form id={form.id} onSubmit={handleSubmit}>
-            <CardContent>
-              <div className="flex flex-col gap-y-6">
-                <div className="grid gap-3">
-                  <Label className="font-semibold">Your current status</Label>
-                  <Select id="status" name="status">
-                    <SelectTrigger className="w-[180px]">
-                      <SelectValue placeholder="Add your status" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="EMPLOYED">Employed</SelectItem>
-                      <SelectItem value="UNEMPLOYED">Unemployed</SelectItem>
-                      <SelectItem value="OPENTOWORK">Open to work</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-                <div className="grid gap-3">
-                  <Label className="font-semibold">Description</Label>
-                  <Textarea
-                    key={fields.description.key}
-                    name={fields.description.name}
-                    defaultValue={fields.description.initialValue}
-                    placeholder="Describe yourself"
-                    className="w-full h-32"
-                  />
-                  <p className="text-red-500 text-sm">
-                    {fields.description.errors}
-                  </p>
-                </div>
-
-                <div className="grid gap-3">
-                  <label
-                    htmlFor="skillsInput"
-                    className="block text-sm font-semibold text-gray-700"
-                  >
-                    Add Skill
-                  </label>
-                  <div className="flex flex-col sm:flex-row sm:space-x-2 space-y-2 sm:space-y-0 items-center">
-                    <Input
-                      type="text"
-                      id="skillsInput"
-                      className="p-2 border rounded-md flex-1"
-                      value={inputSkill}
-                      onChange={(e) => setInputSkill(e.target.value)}
-                      placeholder="Type a skill..."
-                    />
-                    <Button type="button" onClick={addSkill}>
-                      Add
-                    </Button>
-                    <p>{fields.skills.errors}</p>
-                  </div>
-                  <div className="mt-2">
-                    {skills.map((skill, index) => (
-                      <span
-                        key={index}
-                        className="inline-flex items-center bg-gray-200 text-gray-800 px-3 py-1 rounded-full m-1"
-                      >
-                        {skill}
-                        <button
-                          type="button"
-                          className="ml-2 text-red-500 hover:text-red-700"
-                          onClick={() => removeSkill(skill)}
-                        >
-                          &times;
-                        </button>
-                      </span>
-                    ))}
-                  </div>
-                </div>
-
-                <div className="grid gap-3">
-                  <Label className="font-semibold">Type your Location</Label>
-                  <Input
-                    placeholder="City / Country"
-                    key={fields.location.key}
-                    name={fields.location.name}
-                    defaultValue={fields.location.initialValue}
-                    required
-                  />
-                  <p>{fields.location.errors}</p>
-                </div>
-
-                <div className="grid gap-3">
-                  <Label className="font-semibold">Add your contact mail</Label>
-                  <Input
-                    placeholder="E-mail"
-                    key={fields.contact.key}
-                    name={fields.contact.name}
-                    defaultValue={fields.contact.initialValue}
-                    required
-                  />
-                  <p>{fields.contact.errors}</p>
-                </div>
-
-                <div>
-                  <EducationModal />
-                </div>
-                <div>
-                  <ExperienceModal />
-                </div>
-              </div>
-            </CardContent>
-            <CardFooter className="flex justify-end">
-              <Button type="submit">Submit</Button>
-            </CardFooter>
-          </form>
-        </Card>
-      </div>
+      <PorfileEditingForm data={profileData} />
     </div>
   );
 };
