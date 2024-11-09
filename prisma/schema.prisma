@@ -55,7 +55,7 @@ model JobAlert {
 }
 
 model Profile {
-  id             String       @id @default(auto()) @map("_id") @db.ObjectId
+  id             String       @id @default(uuid()) @map("_id")
   description    String
   skills         String[]
   location       String
