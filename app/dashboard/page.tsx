@@ -6,21 +6,15 @@ import prisma from '../utils/db';
 import Image from 'next/image';
 import Link from 'next/link';
 
-async function getData(userId: string) {
-  const data = await prisma.profile.findMany({
-    where: {
-      userId: userId,
-    },
+async function getData(userId) {
+  return prisma.profile.findMany({
+    where: { userId },
   });
-
-  return data;
 }
 
-async function getEducationData(profileId: string) {
-  const data = await prisma.education.findMany({
-    where: {
-      profileId,
-    },
+async function getEducationData(profileId) {
+  return prisma.education.findMany({
+    where: { profileId },
     select: {
       id: true,
       institution: true,
@@ -29,14 +23,11 @@ async function getEducationData(profileId: string) {
       degree: true,
     },
   });
-  return data;
 }
 
-async function getUserData(kindeId: string) {
-  const userData = await prisma.user.findUnique({
-    where: {
-      kindeId: kindeId,
-    },
+async function getUserData(kindeId) {
+  return prisma.user.findUnique({
+    where: { kindeId },
     select: {
       firstName: true,
       lastName: true,
@@ -44,14 +35,11 @@ async function getUserData(kindeId: string) {
       email: true,
     },
   });
-  return userData;
 }
 
-async function getUserExperience(profileId: string) {
-  const userExperience = await prisma.experience.findMany({
-    where: {
-      profileId,
-    },
+async function getUserExperience(profileId) {
+  return prisma.experience.findMany({
+    where: { profileId },
     select: {
       company: true,
       role: true,
@@ -61,7 +49,6 @@ async function getUserExperience(profileId: string) {
       id: true,
     },
   });
-  return userExperience;
 }
 
 const ProfilePage = async () => {
@@ -70,7 +57,8 @@ const ProfilePage = async () => {
   const user = await getUser();
 
   if (!isUserAuthenticated) {
-    return redirect('/api/auth/login');
+    redirect('/api/auth/login');
+    return null;
   }
 
   const userData = await getUserData(user.id);
@@ -117,7 +105,7 @@ const ProfilePage = async () => {
                   About
                 </h3>
                 <p className="text-gray-600">{item.description}</p>
-                <p>
+                <p className="mt-6">
                   <span className="font-semibold mr-1">Contact :</span>
                   {item.contact}
                 </p>
@@ -127,28 +115,24 @@ const ProfilePage = async () => {
                 <h3 className="text-lg font-medium text-gray-700 mb-2">
                   Skills
                 </h3>
-                {item.skills.map((skill) =>
-                  skill === '[]' ? (
-                    <p key={skill}>
-                      Make sure to add some skills at profile page !!
-                    </p>
-                  ) : (
+                {item.skills.length ? (
+                  item.skills.map((skill) => (
                     <span
                       key={skill}
                       className="inline-block bg-blue-100 text-blue-600 px-2 py-1 rounded-md text-sm mr-2 mb-2"
                     >
                       {skill}
                     </span>
-                  )
+                  ))
+                ) : (
+                  <p>Make sure to add some skills on the profile page!</p>
                 )}
               </div>
 
               <div className="w-full bg-gray-100 p-6 rounded-lg shadow-inner mb-6">
-                <div className="flex items-center justify-between">
-                  <h3 className="text-lg font-medium text-gray-700 mb-2">
-                    Experience
-                  </h3>
-                </div>
+                <h3 className="text-lg font-medium text-gray-700 mb-2">
+                  Experience
+                </h3>
                 {experienceData.length > 0 ? (
                   experienceData.map((exp) => (
                     <div
@@ -175,12 +159,11 @@ const ProfilePage = async () => {
                   <p>No experience</p>
                 )}
               </div>
+
               <div className="w-full bg-gray-100 p-6 rounded-lg shadow-inner mb-6">
-                <div className="flex items-center justify-between">
-                  <h3 className="text-lg font-medium text-gray-700 mb-2">
-                    Education
-                  </h3>
-                </div>
+                <h3 className="text-lg font-medium text-gray-700 mb-2">
+                  Education
+                </h3>
                 {educationData.length > 0 ? (
                   educationData.map((eduItem) => (
                     <div
