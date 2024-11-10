@@ -74,7 +74,7 @@ const PorfileEditingForm = ({ data }: { data: profileProps }) => {
     const prevState = lastResult;
 
     // Explicitly submit only when the button is clicked
-    await UpdateProfile(prevState, formData);
+    await UpdateProfile(undefined, formData);
   };
 
   return (
