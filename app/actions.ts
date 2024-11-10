@@ -10,10 +10,36 @@ import {
 import { redirect } from 'next/navigation';
 import { requireUser } from './utils/requireUser';
 import { getKindeServerSession } from '@kinde-oss/kinde-auth-nextjs/server';
-import { cookies } from 'next/headers';
 
+// CreateProfile action
+export async function CreateProfile(prevState: any, formData: FormData) {
+  const user = await requireUser();
+
+  const submission = parseWithZod(formData, {
+    schema: profileSchema,
+  });
+
+  if (submission.status !== 'success') {
+    return submission.reply();
+  }
+
+  await prisma.profile.create({
+    data: {
+      description: submission.value.description,
+      skills: submission.value.skills,
+      location: submission.value.location,
+      employedStatus: submission.value.status,
+      contact: submission.value.contact,
+      userId: user.id,
+    },
+  });
+
+  return redirect('/dashboard');
+}
+
+// UpdateProfile action
 export async function UpdateProfile(prevState: any, formData: FormData) {
-  const user = requireUser();
+  const user = await requireUser();
 
   const submission = parseWithZod(formData, {
     schema: profileSchema,
@@ -25,35 +51,26 @@ export async function UpdateProfile(prevState: any, formData: FormData) {
 
   const existingProfile = await prisma.profile.findUnique({
     where: {
-      userId: (await user).id,
+      userId: user.id,
     },
   });
 
-  if (existingProfile) {
-    await prisma.profile.update({
-      where: {
-        id: existingProfile.id,
-      },
-      data: {
-        description: submission.value.description,
-        skills: submission.value.skills,
-        location: submission.value.location,
-        contact: submission.value.contact,
-        employedStatus: submission.value.status,
-      },
-    });
-  } else {
-    await prisma.profile.create({
-      data: {
-        description: submission.value.description,
-        skills: submission.value.skills,
-        location: submission.value.location,
-        employedStatus: submission.value.status,
-        contact: submission.value.contact,
-        userId: (await user).id,
-      },
-    });
+  if (!existingProfile) {
+    throw new Error('Profile not found');
   }
+
+  await prisma.profile.update({
+    where: {
+      id: existingProfile.id,
+    },
+    data: {
+      description: submission.value.description,
+      skills: submission.value.skills,
+      location: submission.value.location,
+      contact: submission.value.contact,
+      employedStatus: submission.value.status,
+    },
+  });
 
   return redirect('/dashboard');
 }
@@ -170,6 +187,7 @@ export async function updateEducation(prevState: any, formData: FormData) {
   const profileId = user.id;
   const educationId = formData.get('educationId') as string;
 
+  // Perform the database update with correctly parsed fields
   const data = await prisma.education.update({
     where: {
       profileId,
@@ -178,10 +196,11 @@ export async function updateEducation(prevState: any, formData: FormData) {
     data: {
       institution: submission.value.institution,
       degree: submission.value.degree,
-      startDate: submission.value.startYear, 
-      endDate: submission.value.endYear, 
+      startDate: submission.value.startYear, // corrected
+      endDate: submission.value.endYear, // corrected
     },
   });
 
+  // Redirect after successful update
   return redirect(`/dashboard`);
 }
