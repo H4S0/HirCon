@@ -43,7 +43,6 @@
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
     "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "Rebasing master",
     "last_opened_file_path": "C:/Users/DT User/Desktop/jobapp",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
@@ -101,7 +100,7 @@
       <option name="presentableId" value="Default" />
       <updated>1731437804184</updated>
       <workItem from="1731437805653" duration="521000" />
-      <workItem from="1731497128421" duration="8559000" />
+      <workItem from="1731497128421" duration="8884000" />
     </task>
     <task id="LOCAL-00001" summary="updated">
       <option name="closed" value="true" />
