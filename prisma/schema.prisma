@@ -25,15 +25,16 @@ model User {
 }
 
 model Company {
-  id          String     @id @default(auto()) @map("_id") @db.ObjectId
-  name        String
-  description String
-  location    String
-  website     String
-  foundedDate DateTime
-  jobAlerts   JobAlert[] // One-to-many relation with JobAlert
+  id                 String     @id @default(auto()) @map("_id") @db.ObjectId
+  companyName        String
+  industry           String
+  companySize        Int
+  companyDescription String
+  location           String
+  website            String
+  jobAlerts          JobAlert[] // One-to-many relation with JobAlert
 
-  ownerId String @db.ObjectId // Foreign key to the User model
+  ownerId String // Foreign key to the User model, marked as ObjectId
   owner   User   @relation(name: "UserCompanies", fields: [ownerId], references: [id])
 
   createdAt DateTime @default(now())

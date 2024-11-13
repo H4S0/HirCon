@@ -35,5 +35,9 @@ export const profileSchema = z.object({
 
 export const companySchema = z.object({
   companyName: z.string().min(1).max(50),
-  
+  industry: z.string().min(1).max(100),
+  location: z.string().min(2).max(50),
+  companySize: z.number().min(1),
+  companyDescription: z.string().min(1).max(500),
+  website: z.string(),
 });
