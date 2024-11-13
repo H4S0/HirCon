@@ -2,6 +2,15 @@
 @tailwind components;
 @tailwind utilities;
 
+<<<<<<< HEAD
+=======
+/* Add this in your CSS file */
+.clip-triangle {
+  clip-path: polygon(0 0, 100% 0, 0 100%);
+}
+
+
+>>>>>>> 55459b7601ef0d30d860864321a4ad87c7e32571
 body {
   font-family: Arial, Helvetica, sans-serif;
 }

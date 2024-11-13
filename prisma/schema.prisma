@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 // This is your Prisma schema file,
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
@@ -102,3 +103,110 @@ enum Status {
   OPENTOWORK
   UNEMPLOYED
 }
+=======
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           String  @id @default(auto()) @map("_id") @db.ObjectId
+  kindeId      String  @unique // Store Kinde user ID as a string, not ObjectId
+  firstName    String
+  lastName     String
+  email        String  @unique
+  profileImage String?
+
+  profile   Profile?  @relation(name: "UserProfile")
+  companies Company[] @relation(name: "UserCompanies")
+
+  createdAt DateTime @default(now())
+}
+
+model Company {
+  id                 String     @id @default(auto()) @map("_id") @db.ObjectId
+  companyName        String
+  industry           String
+  companySize        Int
+  companyDescription String
+  location           String
+  website            String
+  jobAlerts          JobAlert[] // One-to-many relation with JobAlert
+
+  ownerId String // Foreign key to the User model, marked as ObjectId
+  owner   User   @relation(name: "UserCompanies", fields: [ownerId], references: [id])
+
+  createdAt DateTime @default(now())
+}
+
+model JobAlert {
+  id             String  @id @default(auto()) @map("_id") @db.ObjectId
+  jobTitle       String // Job title/role
+  salary         Float // Salary for the position
+  jobDescription String // Description of the job
+  location       String // Job location (city, country)
+  remote         Boolean // Whether the job is remote or not
+  isActive       Boolean @default(true) // Whether the job alert is active or not
+  jobRole        String // Job role (e.g., Frontend Developer, Backend Developer, etc.)
+  companyId      String  @db.ObjectId // Foreign key to the Company model
+  company        Company @relation(fields: [companyId], references: [id])
+
+  createdAt DateTime @default(now()) // Timestamp of when the job alert was created
+}
+
+model Profile {
+  id             String       @id @default(uuid()) @map("_id")
+  description    String
+  skills         String[]
+  location       String
+  contact        String
+  employedStatus Status
+  education      Education[]
+  experience     Experience[]
+  user           User         @relation(name: "UserProfile", fields: [userId], references: [id])
+  userId         String       @unique
+
+  createdAt DateTime @default(now())
+}
+
+model Education {
+  id          String  @id @default(auto()) @map("_id") @db.ObjectId
+  institution String // Name of the institution
+  degree      Degree // Enum type for degree earned
+  startDate   String // Start date of the education
+  endDate     String // End date of the education
+  profile     Profile @relation(fields: [profileId], references: [id], onDelete: Cascade)
+  profileId   String  @db.ObjectId // Foreign key to the Profile model
+}
+
+model Experience {
+  id              String  @id @default(auto()) @map("_id") @db.ObjectId
+  company         String // Company name
+  role            String // Role or title
+  startDate       String // Start date of the experience
+  endDate         String // End date of the experience
+  roleDescription String
+  profile         Profile @relation(fields: [profileId], references: [id], onDelete: Cascade)
+  profileId       String  @db.ObjectId // Foreign key to the Profile model
+}
+
+enum Degree {
+  HIGH_SCHOOL_DIPLOMA
+  BACHELORS
+  MASTERS
+  DOCTORATE
+}
+
+enum Status {
+  EMPLOYED
+  OPENTOWORK
+  UNEMPLOYED
+}
+>>>>>>> 55459b7601ef0d30d860864321a4ad87c7e32571
