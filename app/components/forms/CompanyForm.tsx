@@ -8,7 +8,6 @@ const CompanyForm = () => {
     <div className="max-w-md mx-auto mt-10 p-6 bg-white rounded-lg shadow-md">
       <h2 className="text-2xl font-semibold mb-4">Create New Company</h2>
       <form className="space-y-4">
-        {/* Company Name */}
         <div>
           <Label htmlFor="companyName">Company Name</Label>
           <Input
