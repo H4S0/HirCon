@@ -74,7 +74,7 @@ const ProfileCreating = () => {
             <div className="grid gap-3">
               <h2>Setup profile</h2>
               <p className="font-semibold">
-                Click the submit button below once you're done...
+                Click the submit button below once you're dones...
               </p>
             </div>
           </CardTitle>
