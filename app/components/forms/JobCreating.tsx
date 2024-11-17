@@ -23,9 +23,10 @@ import {
 import { Textarea } from '@/components/ui/textarea';
 import { useForm } from '@conform-to/react';
 import { parseWithZod } from '@conform-to/zod';
-import React, { useActionState } from 'react';
+import React, { useActionState, useState } from 'react';
 
 const JobCreating = () => {
+  const [isRemote, setIsRemote] = useState(false);
   const [lastResult, action] = useActionState(CreateJobAlert, undefined);
   const [form, fields] = useForm({
     lastResult,
@@ -35,6 +36,14 @@ const JobCreating = () => {
     shouldValidate: 'onBlur',
     shouldRevalidate: 'onInput',
   });
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    const formData = new FormData(e.currentTarget);
+
+    const result = await CreateJobAlert(undefined, formData);
+  };
 
   return (
     <>
@@ -46,7 +55,7 @@ const JobCreating = () => {
           <form
             className="grid gap-5"
             id={form.id}
-            onSubmit={form.onSubmit}
+            onSubmit={handleSubmit}
             action={action}
           >
             <AlertDialogHeader>
@@ -73,9 +82,13 @@ const JobCreating = () => {
                   </div>
                   <div className="grid gap-3">
                     <Label>Level</Label>
-                    <Select>
+                    <Select
+                      key={fields.level.key}
+                      name={fields.level.name}
+                      defaultValue={fields.level.initialValue}
+                    >
                       <SelectTrigger className="w-[180px]">
-                        <SelectValue placeholder="Theme" />
+                        <SelectValue placeholder="Select level" />
                       </SelectTrigger>
                       <SelectContent>
                         <SelectItem value="light">Junior</SelectItem>
@@ -94,21 +107,33 @@ const JobCreating = () => {
                       placeholder="Add your salary per year"
                     />
                   </div>
-                  <div className="grid gap-3">
+
+                  <div className="flex flex-col gap-4 items-start">
                     <Label>Location</Label>
                     <Input
                       placeholder="Describe your role"
                       key={fields.location.key}
                       name={fields.location.name}
                       defaultValue={fields.location.initialValue}
+                      disabled={isRemote} // Disable the location field if remote is checked
                     />
+                    <div className="flex flex-row gap-2 items-center justify-center">
+                      <label>Remote</label>
+                      <input
+                        type="checkbox"
+                        key={fields.remote.key}
+                        name={fields.remote.name}
+                        defaultChecked={fields.remote.initialValue}
+                        onChange={(e) => setIsRemote(e.target.checked)} // Update the remote state
+                      />
+                    </div>
                   </div>
                 </div>
               </AlertDialogDescription>
             </AlertDialogHeader>
             <AlertDialogFooter>
               <AlertDialogCancel>Cancel</AlertDialogCancel>
-              <Button>Submit</Button>
+              <Button type="submit">Submit</Button>
             </AlertDialogFooter>
           </form>
         </AlertDialogContent>
