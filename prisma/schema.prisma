@@ -32,27 +32,25 @@ model Company {
   companyDescription String
   location           String
   website            String
-  jobAlerts          JobAlert[] // One-to-many relation with JobAlert
-
-  ownerId String // Foreign key to the User model, marked as ObjectId
-  owner   User   @relation(name: "UserCompanies", fields: [ownerId], references: [id])
+  jobAlerts          JobAlert[] // One-to-many relation with JobAlert3
+  ownerId            String // Foreign key to the User model, marked as ObjectId
+  owner              User       @relation(name: "UserCompanies", fields: [ownerId], references: [id])
 
   createdAt DateTime @default(now())
 }
 
 model JobAlert {
   id             String  @id @default(auto()) @map("_id") @db.ObjectId
-  jobTitle       String // Job title/role
-  salary         Float // Salary for the position
-  jobDescription String // Description of the job
-  location       String // Job location (city, country)
-  remote         Boolean // Whether the job is remote or not
-  isActive       Boolean @default(true) // Whether the job alert is active or not
-  jobRole        String // Job role (e.g., Frontend Developer, Backend Developer, etc.)
-  companyId      String  @db.ObjectId // Foreign key to the Company model
+  jobTitle       String
+  salary         Float
+  jobDescription String
+  location       String
+  remote         Boolean
+  level          Level
+  companyId      String  @db.ObjectId
   company        Company @relation(fields: [companyId], references: [id])
 
-  createdAt DateTime @default(now()) // Timestamp of when the job alert was created
+  createdAt DateTime @default(now())
 }
 
 model Profile {
@@ -102,4 +100,10 @@ enum Status {
   EMPLOYED
   OPENTOWORK
   UNEMPLOYED
+}
+
+enum Level {
+  JUNIOR
+  MEDIOR
+  SENIOR
 }
