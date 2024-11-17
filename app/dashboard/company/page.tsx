@@ -4,6 +4,7 @@ import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import DashboardNavbar from '@/app/components/DashboardNavbar';
 import { Button } from '@/components/ui/button';
+import JobCreating from '@/app/components/forms/JobCreating';
 
 interface CompanyProps {
   id: string;
@@ -25,7 +26,7 @@ const CompanyPage = () => {
         const response = await fetch('/api/gettingCompany');
         if (!response.ok) throw new Error('Failed to fetch');
         const data = await response.json();
-        console.log('Data received on CompanyPage:', data);
+
         setData(data);
       } catch (error) {
         console.error('Error in fetchData:', error);
@@ -64,10 +65,8 @@ const CompanyPage = () => {
                   <p className="text-gray-500">{company.location}</p>
                 </div>
                 <div className="flex flex-col items-end space-y-2">
-                  <Button className="bg-blue-600 text-white font-semibold px-4 py-2 rounded-lg hover:bg-blue-700 w-full">
-                    Create Job Alert
-                  </Button>
-                  <Link href={`/dashboard/company/edit/${company.id}`}>
+                  <JobCreating />
+                  <Link href={`/dashboard/company/${company.id}`}>
                     <Button className="bg-green-600 text-white font-semibold px-4 py-2 rounded-lg hover:bg-green-700 w-full">
                       Edit Company
                     </Button>
