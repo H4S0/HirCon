@@ -9,6 +9,8 @@ const DegreeEnum = z.enum([
 
 const seniorityEnum = z.enum(['JUNIOR', 'MEDIOR', 'SENIOR']);
 
+const remoteEnum = z.enum(['AVAILABLE', 'NOT_AVAILABLE']);
+
 const statusEnum = z.enum(['EMPLOYED', 'UNEMPLOYED', 'OPENTOWORK']);
 
 export const educationSchema = z.object({
@@ -46,9 +48,9 @@ export const companySchema = z.object({
 
 export const jobAlertSchema = z.object({
   jobTitle: z.string().min(1).max(50),
-  salary: z.number(),
-  jobDescription: z.string().min(5).max(500),
+  salary: z.string(),
+  jobDescription: z.string().min(5).max(2000),
   location: z.string().min(1).max(50),
-  remote: z.boolean(),
+  remote: remoteEnum,
   level: seniorityEnum,
 });
