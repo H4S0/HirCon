@@ -42,12 +42,12 @@ model Company {
 model JobAlert {
   id             String  @id @default(auto()) @map("_id") @db.ObjectId
   jobTitle       String
-  salary         Float
+  salary         String
   jobDescription String
   location       String
-  remote         Boolean
+  remote         Remote
   level          Level
-  companyId      String  @db.ObjectId
+  companyId      String
   company        Company @relation(fields: [companyId], references: [id])
 
   createdAt DateTime @default(now())
@@ -106,4 +106,9 @@ enum Level {
   JUNIOR
   MEDIOR
   SENIOR
+}
+
+enum Remote {
+  AVAILABLE
+  NOT_AVAILABLE
 }
