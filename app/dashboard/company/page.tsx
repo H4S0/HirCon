@@ -65,7 +65,9 @@ const CompanyPage = () => {
                   <p className="text-gray-500">{company.location}</p>
                 </div>
                 <div className="flex flex-col items-end space-y-2">
-                  <JobCreating />
+                  <div>
+                    <JobCreating />
+                  </div>
                   <Link href={`/dashboard/company/${company.id}`}>
                     <Button className="bg-green-600 text-white font-semibold px-4 py-2 rounded-lg hover:bg-green-700 w-full">
                       Edit Company
