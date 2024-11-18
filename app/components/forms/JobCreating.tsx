@@ -42,9 +42,6 @@ const JobCreating = () => {
     e.preventDefault();
 
     const formData = new FormData(e.currentTarget);
-    if (isRemote) {
-      formData.set('location', ' '); // Set location to empty string if remote is true
-    }
 
     const result = await CreateJobAlert(undefined, formData);
   };
@@ -121,16 +118,23 @@ const JobCreating = () => {
                       defaultValue={fields.location.initialValue}
                       disabled={isRemote} // Disable the location field if remote is checked
                     />
-                    <div className="flex flex-row gap-2 items-center justify-center">
+                    <div className="grid gap-3">
                       <label>Remote</label>
-                      <input
-                        type="checkbox"
+                      <Select
                         key={fields.remote.key}
                         name={fields.remote.name}
-                        // Convert the initial value to a boolean
-                        defaultChecked={Boolean(fields.remote.initialValue)}
-                        onChange={(e) => setIsRemote(e.target.checked)}
-                      />
+                        defaultValue={fields.remote.initialValue}
+                      >
+                        <SelectTrigger className="w-[180px]">
+                          <SelectValue placeholder="Select level" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="AVAILABLE">Available</SelectItem>
+                          <SelectItem value="NOT_AVAILABLE">
+                            Not available
+                          </SelectItem>
+                        </SelectContent>
+                      </Select>
                     </div>
                   </div>
                 </div>
