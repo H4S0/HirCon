@@ -33,6 +33,7 @@ const JobCreating = () => {
     onValidate({ formData }) {
       return parseWithZod(formData, { schema: jobAlertSchema });
     },
+
     shouldValidate: 'onBlur',
     shouldRevalidate: 'onInput',
   });
@@ -41,6 +42,9 @@ const JobCreating = () => {
     e.preventDefault();
 
     const formData = new FormData(e.currentTarget);
+    if (isRemote) {
+      formData.set('location', ' '); // Set location to empty string if remote is true
+    }
 
     const result = await CreateJobAlert(undefined, formData);
   };
@@ -91,9 +95,9 @@ const JobCreating = () => {
                         <SelectValue placeholder="Select level" />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="light">Junior</SelectItem>
-                        <SelectItem value="dark">Medior</SelectItem>
-                        <SelectItem value="system">Senior</SelectItem>
+                        <SelectItem value="JUNIOR">Junior</SelectItem>
+                        <SelectItem value="MEDIOR">Medior</SelectItem>
+                        <SelectItem value="SENIOR">Senior</SelectItem>
                       </SelectContent>
                     </Select>
                   </div>
@@ -123,8 +127,9 @@ const JobCreating = () => {
                         type="checkbox"
                         key={fields.remote.key}
                         name={fields.remote.name}
-                        defaultChecked={fields.remote.initialValue}
-                        onChange={(e) => setIsRemote(e.target.checked)} // Update the remote state
+                        // Convert the initial value to a boolean
+                        defaultChecked={Boolean(fields.remote.initialValue)}
+                        onChange={(e) => setIsRemote(e.target.checked)}
                       />
                     </div>
                   </div>
@@ -132,7 +137,6 @@ const JobCreating = () => {
               </AlertDialogDescription>
             </AlertDialogHeader>
             <AlertDialogFooter>
-              <AlertDialogCancel>Cancel</AlertDialogCancel>
               <Button type="submit">Submit</Button>
             </AlertDialogFooter>
           </form>
