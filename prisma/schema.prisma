@@ -46,6 +46,7 @@ model JobAlert {
   jobDescription String
   location       String
   remote         Remote
+  jobType        JobType
   level          Level
   companyId      String
   company        Company @relation(fields: [companyId], references: [id])
@@ -111,4 +112,11 @@ enum Level {
 enum Remote {
   AVAILABLE
   NOT_AVAILABLE
+}
+
+enum JobType {
+  FULL_TIME
+  PART_TIME
+  CONTRACT
+  INTERNSHIP
 }
