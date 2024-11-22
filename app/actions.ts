@@ -243,12 +243,24 @@ export async function CreateCompany(prevRes: any, formData = FormData) {
 export async function UpdateCompany(prevState: any, formData: FormData) {}
 
 export async function CreateJobAlert(prevState: any, formData: FormData) {
-  const user = requireUser();
+  const { getUser } = getKindeServerSession();
+  const user = getUser();
+
+  // Log formData before parsing to check its structure
+  console.log(
+    'Form Data before parsing:',
+    Object.fromEntries(formData.entries())
+  );
 
   const submission = parseWithZod(formData, { schema: jobAlertSchema });
 
+  // Log the submission result
+  console.log('Submission Data:', submission);
+
+  // If validation failed, log the specific errors
   if (submission.status !== 'success') {
-    return submission.reply();
+    console.log('Validation Errors:', submission.errors);
+    return submission.reply(); // Return the error response
   }
 
   const profile = await prisma.profile.findUnique({
@@ -267,7 +279,10 @@ export async function CreateJobAlert(prevState: any, formData: FormData) {
       jobDescription: submission.value.jobDescription,
       location: submission.value.location,
       remote: submission.value.remote,
+      jobType: submission.value.jobType,
+      level: submission.value.level,
       salary: submission.value.salary,
+      companyId: (await user).id,
     },
   });
 
