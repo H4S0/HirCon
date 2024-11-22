@@ -7,6 +7,13 @@ const DegreeEnum = z.enum([
   'DOCTORATE',
 ]);
 
+const jobTypeEnum = z.enum([
+  'FULL_TIME',
+  'PART_TIME',
+  'CONTRACT',
+  'INTERNSHIP',
+]);
+
 const seniorityEnum = z.enum(['JUNIOR', 'MEDIOR', 'SENIOR']);
 
 const remoteEnum = z.enum(['AVAILABLE', 'NOT_AVAILABLE']);
@@ -53,4 +60,5 @@ export const jobAlertSchema = z.object({
   location: z.string().min(1).max(50),
   remote: remoteEnum,
   level: seniorityEnum,
+  jobType: jobTypeEnum,
 });
