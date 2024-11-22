@@ -158,6 +158,7 @@ const JobCreating = () => {
               </AlertDialogDescription>
             </AlertDialogHeader>
             <AlertDialogFooter>
+              <AlertDialogCancel>Cancel</AlertDialogCancel>
               <Button type="submit">Submit</Button>
             </AlertDialogFooter>
           </form>
