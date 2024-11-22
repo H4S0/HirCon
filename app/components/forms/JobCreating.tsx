@@ -88,13 +88,30 @@ const JobCreating = () => {
                       name={fields.level.name}
                       defaultValue={fields.level.initialValue}
                     >
-                      <SelectTrigger className="w-[180px]">
+                      <SelectTrigger>
                         <SelectValue placeholder="Select level" />
                       </SelectTrigger>
                       <SelectContent>
                         <SelectItem value="JUNIOR">Junior</SelectItem>
                         <SelectItem value="MEDIOR">Medior</SelectItem>
                         <SelectItem value="SENIOR">Senior</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  <div className="grid gap-3">
+                    <Select
+                      key={fields.jobType.key}
+                      name={fields.jobType.name}
+                      defaultValue={fields.jobType.initialValue}
+                    >
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select job type" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="FULL_TIME">Full-time</SelectItem>
+                        <SelectItem value="PART_TIME">Part-time</SelectItem>
+                        <SelectItem value="CONTRACT">Contract</SelectItem>
+                        <SelectItem value="INTERNSHIP">Internship</SelectItem>
                       </SelectContent>
                     </Select>
                   </div>
