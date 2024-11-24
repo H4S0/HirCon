@@ -5,6 +5,7 @@ import Link from 'next/link';
 import DashboardNavbar from '@/app/components/DashboardNavbar';
 import { Button } from '@/components/ui/button';
 import JobCreating from '@/app/components/forms/JobCreating';
+import JobAlert from '@/app/components/JobAlert';
 
 interface CompanyProps {
   id: string;
@@ -16,9 +17,38 @@ interface CompanyProps {
   website: string;
 }
 
+export interface JobAlertProps {
+  id: string;
+  jobTitle: string;
+  salary: string;
+  jobDescription: string;
+  location: string;
+  remote: string;
+  jobType: string;
+  level: string;
+}
+
 const CompanyPage = () => {
   const [data, setData] = useState<CompanyProps[]>([]);
   const [loading, setLoading] = useState(true); // loading state
+  const [jobAlertData, setJobAlertData] = useState<JobAlertProps[]>([]);
+
+  useEffect(() => {
+    async function fetchData() {
+      try {
+        const response = await fetch('/api/gettingJobAlert');
+        if (!response.ok) throw new Error('Failed to fetch');
+        const data = await response.json();
+
+        setJobAlertData(data);
+      } catch (error) {
+        console.error('Error in fetchData:', error);
+      } finally {
+        setLoading(false); // stop loading after data is fetched
+      }
+    }
+    fetchData();
+  }, []);
 
   useEffect(() => {
     async function fetchData() {
@@ -65,9 +95,7 @@ const CompanyPage = () => {
                   <p className="text-gray-500">{company.location}</p>
                 </div>
                 <div className="flex flex-col items-end space-y-2">
-                  <div>
-                    <JobCreating />
-                  </div>
+                  <JobCreating />
                   <Link href={`/dashboard/company/${company.id}`}>
                     <Button className="bg-green-600 text-white font-semibold px-4 py-2 rounded-lg hover:bg-green-700 w-full">
                       Edit Company
@@ -102,6 +130,7 @@ const CompanyPage = () => {
               </div>
             </div>
           ))}
+          <JobAlert data={jobAlertData} />
         </div>
       ) : (
         <Link href={'/dashboard/company/new'}>New Company</Link>
