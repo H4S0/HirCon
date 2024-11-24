@@ -1,6 +1,6 @@
 'use client';
 
-import { updateCompany } from '@/app/actions';
+import { UpdateCompany } from '@/app/actions';
 import { companySchema } from '@/app/utils/zodSchemas';
 import { Button } from '@/components/ui/button';
 import {
@@ -11,13 +11,6 @@ import {
 } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
 import { useForm } from '@conform-to/react';
 import { parseWithZod } from '@conform-to/zod';
 import React, { useState } from 'react';
@@ -53,7 +46,7 @@ const CompanyForm = ({
     e.preventDefault();
 
     const formData = new FormData(e.currentTarget);
-    await updateCompany(companyId, formData); // Update the company with form data
+    await UpdateCompany(companyId, formData); // Update the company with form data
   };
 
   return (
