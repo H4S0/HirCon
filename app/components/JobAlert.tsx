@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { JobAlertProps } from '../dashboard/company/page';
 import { Button } from '@/components/ui/button';
+import Link from 'next/link';
 
 const JobAlert = ({ data }: { data: JobAlertProps[] }) => {
   return (
@@ -49,7 +50,9 @@ const JobCard = ({ item }: { item: JobAlertProps }) => {
       >
         {expanded ? 'Show Less' : 'Read More'}
       </button>
-      <Button className="w-full">Edit your job alert</Button>
+      <Link href={`/dashboard/company/job/${item.id}`}>
+        <Button className="w-full">Edit your job alert</Button>
+      </Link>
     </div>
   );
 };
