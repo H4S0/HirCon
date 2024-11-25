@@ -3,7 +3,7 @@ import { requireUser } from '@/app/utils/requireUser';
 import { redirect } from 'next/navigation';
 import { NextResponse } from 'next/server';
 
-export async function GET(request: Request) {
+export async function GET() {
   const user = requireUser();
 
   if (!user) {
@@ -12,10 +12,17 @@ export async function GET(request: Request) {
 
   const data = await prisma.jobAlert.findMany({
     where: {
-      id: (await user).id,
+      companyId: (await user).id,
     },
     select: {
       jobTitle: true,
+      jobDescription: true,
+      salary: true,
+      jobType: true,
+      remote: true,
+      level: true,
+      location: true,
+      id: true,
     },
   });
 
