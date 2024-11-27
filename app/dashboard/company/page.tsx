@@ -130,7 +130,7 @@ const CompanyPage = () => {
               </div>
             </div>
           ))}
-          <JobAlert data={jobAlertData} />
+          <JobAlert data={jobAlertData} currentRoute="/dashboard/company" />
         </div>
       ) : (
         <Link href={'/dashboard/company/new'}>New Company</Link>
