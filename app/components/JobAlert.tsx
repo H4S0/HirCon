@@ -42,16 +42,20 @@ const JobCard = ({
         )}
       </p>
       <p className="text-gray-500 text-sm mb-2">
-        <span className="font-medium">Job Type:</span> {item.jobType}
+        <span className="font-medium">Job Type:</span>{' '}
+        {item.jobType.charAt(0).toUpperCase() +
+          item.jobType.slice(1).toLowerCase()}
       </p>
       <p className="text-gray-500 text-sm mb-2">
-        <span className="font-medium">Level:</span> {item.level}
+        <span className="font-medium">Level:</span>{' '}
+        {item.level.charAt(0).toUpperCase() + item.level.slice(1).toLowerCase()}
       </p>
       <p className="text-gray-500 text-sm mb-2">
         <span className="font-medium">Salary:</span> ${item.salary}
       </p>
       <p className="text-gray-500 text-sm mb-2">
-        <span className="font-medium">Remote:</span> {item.remote}
+        <span className="font-medium">Remote:</span>{' '}
+        {item.remote === 'AVAILABLE' ? 'Available' : 'Not available'}
       </p>
       <p className={`text-gray-600 mb-4 ${expanded ? '' : 'line-clamp-3'}`}>
         {item.jobDescription}
