@@ -43,8 +43,13 @@ const JobCard = ({
       </p>
       <p className="text-gray-500 text-sm mb-2">
         <span className="font-medium">Job Type:</span>{' '}
-        {item.jobType.charAt(0).toUpperCase() +
-          item.jobType.slice(1).toLowerCase()}
+        {item.jobType === 'FULL_TIME'
+          ? 'Full time'
+          : item.jobType === 'PART_TIME'
+          ? 'Part time'
+          : item.jobType === 'CONTRACT'
+          ? 'Contract'
+          : 'Internship'}
       </p>
       <p className="text-gray-500 text-sm mb-2">
         <span className="font-medium">Level:</span>{' '}
