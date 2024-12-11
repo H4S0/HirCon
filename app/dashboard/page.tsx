@@ -1,212 +1,142 @@
-import React from 'react';
-import DashboardNavbar from '../components/DashboardNavbar';
-import {getKindeServerSession} from '@kinde-oss/kinde-auth-nextjs/server';
-import {redirect} from 'next/navigation';
-import prisma from '../utils/db';
-import Image from 'next/image';
+'use client';
+
+import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
+import DashboardNavbar from '@/app/components/DashboardNavbar';
+import { Button } from '@/components/ui/button';
+import JobCreating from '@/app/components/forms/JobCreating';
+import JobAlert from '@/app/components/JobAlert';
 
-async function getData(userId: string) {
-    return prisma.profile.findMany({
-        where: {userId},
-    });
+interface CompanyProps {
+  id: string;
+  companyName: string;
+  industry: string;
+  location: string;
+  companyDescription: string;
+  companySize: number;
+  website: string;
 }
 
-async function getEducationData(profileId: string) {
-    return prisma.education.findMany({
-        where: {profileId},
-        select: {
-            id: true,
-            institution: true,
-            startDate: true,
-            endDate: true,
-            degree: true,
-        },
-    });
+export interface JobAlertProps {
+  id: string;
+  jobTitle: string;
+  salary: string;
+  jobDescription: string;
+  location: string;
+  remote: string;
+  jobType: string;
+  level: string;
 }
 
-async function getUserData(kindeId: string) {
-    return prisma.user.findUnique({
-        where: {kindeId},
-        select: {
-            firstName: true,
-            lastName: true,
-            profileImage: true,
-            email: true,
-        },
-    });
-}
+const CompanyPage = () => {
+  const [data, setData] = useState<CompanyProps[]>([]);
+  const [loading, setLoading] = useState(true); // loading state
+  const [jobAlertData, setJobAlertData] = useState<JobAlertProps[]>([]);
 
-async function getUserExperience(profileId: string) {
-    return prisma.experience.findMany({
-        where: {profileId},
-        select: {
-            company: true,
-            role: true,
-            roleDescription: true,
-            startDate: true,
-            endDate: true,
-            id: true,
-        },
-    });
-}
+  useEffect(() => {
+    async function fetchData() {
+      try {
+        const response = await fetch('/api/jobAlert');
+        if (!response.ok) throw new Error('Failed to fetch');
+        const data = await response.json();
 
-const ProfilePage = async () => {
-    const {isAuthenticated, getUser} = getKindeServerSession();
-    const isUserAuthenticated = await isAuthenticated();
-    const user = await getUser();
-
-    if (!isUserAuthenticated) {
-        redirect('/api/auth/login');
-        return null;
+        setJobAlertData(data);
+      } catch (error) {
+        console.error('Error in fetchData:', error);
+      } finally {
+        setLoading(false); // stop loading after data is fetched
+      }
     }
+    fetchData();
+  }, []);
 
-    const userData = await getUserData(user.id);
-    const profileData = await getData(user.id);
-    const educationData = await getEducationData(user.profileId);
-    const experienceData = await getUserExperience(user.profileId);
+  useEffect(() => {
+    async function fetchData() {
+      try {
+        const response = await fetch('/api/gettingCompany');
+        if (!response.ok) throw new Error('Failed to fetch');
+        const data = await response.json();
 
+        setData(data);
+      } catch (error) {
+        console.error('Error in fetchData:', error);
+      } finally {
+        setLoading(false);
+      }
+    }
+    fetchData();
+  }, []);
+
+  if (loading) {
     return (
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-24">
-            <DashboardNavbar/>
-            {profileData.map((item) => (
-                <div
-                    key={item.id}
-                    className="max-w-4xl mx-auto bg-white p-6 shadow-md rounded-lg mb-10 mt-10"
-                >
-                    {userData ? (
-                        <div className="flex flex-col items-center gap-6">
-                            <div className="flex items-center gap-4 mb-6">
-                                <Image
-                                    src={userData.profileImage}
-                                    alt="Profile Image"
-                                    width={100}
-                                    height={100}
-                                    className="rounded-full border-2 border-gray-300 shadow-lg"
-                                />
-                                <div>
-                                    <h2 className="text-2xl font-semibold text-gray-800">
-                                        {userData.firstName} {userData.lastName}
-                                    </h2>
-                                    <p className="text-gray-600">
-                                        Current status:{' '}
-                                        {item.employedStatus === 'OPENTOWORK'
-                                            ? 'Open to work'
-                                            : item.employedStatus === 'EMPLOYED'
-                                                ? 'Employed'
-                                                : 'Unemployed'}
-                                    </p>
-                                    <p className="text-sm text-gray-500">{item.location}</p>
-                                </div>
-                            </div>
-
-                            <div className="w-full bg-gray-100 p-6 rounded-lg shadow-inner mb-6">
-                                <h3 className="text-lg font-medium text-gray-700 mb-2">
-                                    About
-                                </h3>
-                                <p className="text-gray-600">{item.description}</p>
-                                <p className="mt-6">
-                                    <span className="font-semibold mr-1">Contact :</span>
-                                    {item.contact}
-                                </p>
-                            </div>
-
-                            <div className="w-full bg-gray-100 p-6 rounded-lg shadow-inner mb-6">
-                                <h3 className="text-lg font-medium text-gray-700 mb-2">
-                                    Skills
-                                </h3>
-                                {item.skills.length ? (
-                                    item.skills.map((skill) => (
-                                        <span
-                                            key={skill}
-                                            className="inline-block bg-blue-100 text-blue-600 px-2 py-1 rounded-md text-sm mr-2 mb-2"
-                                        >
-                      {skill}
-                    </span>
-                                    ))
-                                ) : (
-                                    <p>Make sure to add some skills on the profile page!</p>
-                                )}
-                            </div>
-
-                            <div className="w-full bg-gray-100 p-6 rounded-lg shadow-inner mb-6">
-                                <h3 className="text-lg font-medium text-gray-700 mb-2">
-                                    Experience
-                                </h3>
-                                {experienceData.length > 0 ? (
-                                    experienceData.map((exp) => (
-                                        <div
-                                            key={exp.id}
-                                            className="border-b border-gray-200 pb-4 mb-4 flex justify-between items-center"
-                                        >
-                                            <div>
-                                                <h4 className="text-gray-800 font-semibold">
-                                                    {exp.company}
-                                                </h4>
-                                                <p className="text-gray-600">{exp.role}</p>
-                                                <p className="text-gray-500 text-sm">
-                                                    {exp.startDate} - {exp.endDate}
-                                                </p>
-                                            </div>
-                                            <Link href={`/dashboard/experience/${exp.id}`}>
-                                                <button className="text-blue-500 text-sm hover:underline">
-                                                    Edit
-                                                </button>
-                                            </Link>
-                                        </div>
-                                    ))
-                                ) : (
-                                    <p>No experience</p>
-                                )}
-                            </div>
-
-                            <div className="w-full bg-gray-100 p-6 rounded-lg shadow-inner mb-6">
-                                <h3 className="text-lg font-medium text-gray-700 mb-2">
-                                    Education
-                                </h3>
-                                {educationData.length > 0 ? (
-                                    educationData.map((eduItem) => (
-                                        <div
-                                            key={eduItem.id}
-                                            className="border-b border-gray-200 pb-4 mb-4 flex justify-between items-center"
-                                        >
-                                            <div>
-                                                <h4 className="text-gray-800 font-semibold">
-                                                    {eduItem.institution}
-                                                </h4>
-                                                <p className="text-gray-600">{eduItem.degree}</p>
-                                                <p className="text-gray-500 text-sm">
-                                                    {eduItem.startDate} - {eduItem.endDate}
-                                                </p>
-                                            </div>
-                                            <Link href={`/dashboard/education/${eduItem.id}`}>
-                                                <button className="text-blue-500 text-sm hover:underline">
-                                                    Edit
-                                                </button>
-                                            </Link>
-                                        </div>
-                                    ))
-                                ) : (
-                                    <p className="text-gray-500">
-                                        No education records found. Go to your profile to add
-                                        education.
-                                        <Link
-                                            href={'/dashboard/profileediting'}
-                                            className="font-semibold underline ml-3"
-                                        >
-                                            Profile
-                                        </Link>
-                                    </p>
-                                )}
-                            </div>
-                        </div>
-                    ) : (
-                        <p className="text-center text-gray-500">No data available</p>
-                    )}
-                </div>
-            ))}
-        </div>
+      <div className="flex justify-center items-center h-screen">
+        <p className="text-gray-500 text-lg">Loading company information...</p>
+      </div>
     );
+  }
+
+  return (
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-24">
+      <DashboardNavbar />
+
+      {data && data.length > 0 ? (
+        <div className="bg-white shadow-md rounded-lg p-6 mt-6">
+          {data.map((company) => (
+            <div key={company.id} className="mb-6">
+              {' '}
+              {/* Moved key to the top-level element */}
+              <div className="flex items-center space-x-6">
+                <div className="w-24 h-24 bg-gray-200 rounded-full flex-shrink-0 flex items-center justify-center text-gray-500">
+                  <span className="text-sm">Logo</span>
+                </div>
+                <div className="flex-1">
+                  <h1 className="text-2xl font-bold">{company.companyName}</h1>
+                  <p className="text-gray-500">{company.industry}</p>
+                  <p className="text-gray-500">{company.location}</p>
+                </div>
+                <div className="flex flex-col items-end space-y-2">
+                  <JobCreating />
+                  <Link href={`/dashboard/company/${company.id}`}>
+                    <Button className="bg-green-600 text-white font-semibold px-4 py-2 rounded-lg hover:bg-green-700 w-full">
+                      Edit Company
+                    </Button>
+                  </Link>
+                </div>
+              </div>
+              <div className="mt-4">
+                <p className="text-gray-600">{company.companyDescription}</p>
+                <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div>
+                    <h3 className="text-sm font-medium text-gray-500">
+                      Company Size
+                    </h3>
+                    <p className="text-lg font-semibold text-gray-700">
+                      {company.companySize}
+                    </p>
+                  </div>
+                  <div>
+                    <h3 className="text-sm font-medium text-gray-500">
+                      Website
+                    </h3>
+                    <a
+                      href={company.website}
+                      target="_blank"
+                      className="text-blue-500 underline"
+                    >
+                      {company.website}
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          ))}
+          <JobAlert data={jobAlertData} currentRoute="/dashboard/company" />
+        </div>
+      ) : (
+        <Link href={'/dashboard/company/new'}>New Company</Link>
+      )}
+    </div>
+  );
 };
 
-export default ProfilePage;
+export default CompanyPage;
