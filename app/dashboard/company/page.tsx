@@ -36,7 +36,7 @@ const CompanyPage = () => {
   useEffect(() => {
     async function fetchData() {
       try {
-        const response = await fetch('/api/gettingJobAlert');
+        const response = await fetch('/api/jobAlert');
         if (!response.ok) throw new Error('Failed to fetch');
         const data = await response.json();
 
@@ -61,7 +61,7 @@ const CompanyPage = () => {
       } catch (error) {
         console.error('Error in fetchData:', error);
       } finally {
-        setLoading(false); // stop loading after data is fetched
+        setLoading(false);
       }
     }
     fetchData();
