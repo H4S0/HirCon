@@ -1,4 +1,3 @@
-import { getKindeServerSession } from '@kinde-oss/kinde-auth-nextjs/server';
 import prisma from '@/app/utils/db';
 import { redirect } from 'next/navigation';
 import { NextResponse } from 'next/server';
