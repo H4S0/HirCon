@@ -8,6 +8,7 @@ const JobList = () => {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
+  const [searchQuery, setSearchQuery] = useState<string>(''); 
 
   useEffect(() => {
     async function fetchData() {
@@ -51,28 +52,37 @@ const JobList = () => {
     );
   }
 
-  if (data.length === 0) {
+  const filteredData = data.filter(
+    (job) =>
+      job.jobTitle.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      job.location.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      job.level.toLowerCase().includes(searchQuery.toLowerCase()) 
+  );
+
+  if (filteredData.length === 0) {
     return (
       <div className="p-4 min-h-screen flex items-center justify-center">
         <p className="text-lg font-semibold text-gray-600">
-          No job alerts available.
+          No job alerts match your search.
         </p>
       </div>
     );
   }
 
   return (
-    <div className="p-6 min-h-screen ">
+    <div className="p-6 min-h-screen">
       <h2 className="text-3xl font-bold text-center text-gray-800 mb-8">
         Job Alerts
       </h2>
       <div className="max-w-2xl mx-auto mb-6">
         <Input
-          placeholder="Search for a job"
+          placeholder="Search for a job (title, location, or level)"
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)} 
           className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500"
         />
       </div>
-      <JobAlert data={data} currentRoute="/" />
+      <JobAlert data={filteredData} currentRoute="/" />
     </div>
   );
 };
