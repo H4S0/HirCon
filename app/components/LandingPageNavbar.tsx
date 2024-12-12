@@ -35,22 +35,22 @@ const Navbar = () => {
             Dashboard
           </Link>
           <Link href={'/profile'} className="hover:underline">
-            Profile
+            Users
           </Link>
-          <Link href={'/company'} className="hover:underline">
-            Company
-          </Link>
-          <Link href={'/job'} className="hover:underline">
-            Find a job
+          <Link href={'/companies'} className="hover:underline">
+            Companies
           </Link>
         </div>
         <div className="hidden md:flex gap-5">
           {isLoading ? (
             <p className="font-bold">loading...</p>
           ) : isAuthenticated ? (
-            <LogoutLink>
-              <Button>Logout</Button>
-            </LogoutLink>
+            <div className="grid grid-cols-2 items-center">
+              <p>{user?.given_name}</p>
+              <LogoutLink>
+                <Button>Logout</Button>
+              </LogoutLink>
+            </div>
           ) : (
             <>
               <RegisterLink>
