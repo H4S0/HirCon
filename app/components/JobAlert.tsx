@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { JobAlertProps } from '../dashboard/company/page';
+import { JobAlertProps } from '../dashboard/company/[companyId]/page';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 
@@ -29,11 +29,10 @@ const JobCard = ({
   currentRoute: string;
 }) => {
   const [expanded, setExpanded] = useState(false);
-
   const isCompanyDashboard = currentRoute === '/dashboard/company';
 
   return (
-    <div className="border rounded-lg shadow-md bg-white p-4 hover:shadow-lg transition">
+    <div className="border rounded-lg shadow-md bg-white p-4 hover:shadow-lg transition flex flex-col h-full">
       <h2 className="text-xl font-semibold">{item.jobTitle}</h2>
       <p className="text-gray-500 text-sm mb-2">
         <span className="font-medium">Location:</span> {item.location}{' '}
@@ -62,7 +61,13 @@ const JobCard = ({
         <span className="font-medium">Remote:</span>{' '}
         {item.remote === 'AVAILABLE' ? 'Available' : 'Not available'}
       </p>
-      <p className={`text-gray-600 mb-4 ${expanded ? '' : 'line-clamp-3'}`}>
+
+      {/* Flex-grow pushes this content up, so button stays at bottom */}
+      <p
+        className={`text-gray-600 mb-4 ${
+          expanded ? '' : 'line-clamp-3'
+        } flex-grow`}
+      >
         {item.jobDescription}
       </p>
       <button
@@ -71,15 +76,18 @@ const JobCard = ({
       >
         {expanded ? 'Show Less' : 'Read More'}
       </button>
-      {isCompanyDashboard ? (
-        <Link href={`/dashboard/company/job/${item.id}`}>
-          <Button className="w-full">Edit your job alert</Button>
-        </Link>
-      ) : (
-        <Link href={`/apply/job/${item.id}`}>
-          <Button className="w-full">Apply to Job</Button>
-        </Link>
-      )}
+
+      <div className="mt-auto">
+        {isCompanyDashboard ? (
+          <Link href={`/dashboard/company/job/${item.id}`}>
+            <Button className="w-full">Edit your job alert</Button>
+          </Link>
+        ) : (
+          <Link href={`/apply/job/${item.id}`}>
+            <Button className="w-full">Apply to Job</Button>
+          </Link>
+        )}
+      </div>
     </div>
   );
 };
