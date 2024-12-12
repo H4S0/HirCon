@@ -1,20 +1,42 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { LogoutLink } from '@kinde-oss/kinde-auth-nextjs/components';
 import { UsersRound } from 'lucide-react';
 import { Menu, X } from 'lucide-react';
 import { useKindeBrowserClient } from '@kinde-oss/kinde-auth-nextjs';
+import { CompanyProps } from '../dashboard/company/[companyId]/page';
 
 const DashboardNavbar = () => {
   const { user, isAuthenticated, isLoading } = useKindeBrowserClient();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [data, setData] = useState<CompanyProps[]>([]);
+  const [loading, setLoading] = useState(true);
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
   };
+
+  useEffect(() => {
+    async function fetchData() {
+      try {
+        const response = await fetch('/api/gettingCompany');
+        if (!response.ok) throw new Error('Failed to fetch');
+        const data = await response.json();
+
+        setData(data);
+      } catch (error) {
+        console.error('Error in fetchData:', error);
+      } finally {
+        setLoading(false);
+      }
+    }
+    fetchData();
+  }, []);
+
+  const companyId = data.map((item) => item.id);
 
   return (
     <>
@@ -32,7 +54,7 @@ const DashboardNavbar = () => {
           <Link href={'/dashboard/profileediting'} className="hover:underline">
             Profile
           </Link>
-          <Link href={'/dashboard/company'} className="hover:underline">
+          <Link href={`/dashboard/company`} className="hover:underline">
             Company
           </Link>
         </div>
@@ -40,7 +62,7 @@ const DashboardNavbar = () => {
           {isLoading ? (
             <p className="font-bold">loading...</p>
           ) : isAuthenticated ? (
-            <div className="flex items-center gap-2">
+            <div className="grid grid-cols-2 items-center">
               <p className="font-semibold">{user?.given_name}</p>
 
               <LogoutLink>
