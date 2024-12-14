@@ -2,6 +2,7 @@ import React from 'react';
 import Hero from './components/landingpage/Hero';
 import Process from './components/landingpage/Process';
 import JobList from './components/landingpage/JobList';
+import Footer from './components/landingpage/Footer';
 
 export default function Home() {
   return (
@@ -10,6 +11,7 @@ export default function Home() {
         <Hero />
         <Process />
         <JobList />
+        <Footer />
       </div>
     </>
   );
