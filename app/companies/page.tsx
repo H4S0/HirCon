@@ -43,7 +43,7 @@ const Page = () => {
 
       <div className="max-w-2xl mx-auto mb-6">
         <Input
-          placeholder="Search for a job (title, location, or level)"
+          placeholder="Search for a company (company name)"
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
         />
