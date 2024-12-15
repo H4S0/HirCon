@@ -13,7 +13,6 @@ import { redirect } from 'next/navigation';
 import { requireUser } from './utils/requireUser';
 import { getKindeServerSession } from '@kinde-oss/kinde-auth-nextjs/server';
 
-// CreateProfile action
 export async function CreateProfile(prevState: any, formData: FormData) {
   const user = await requireUser();
 
@@ -39,7 +38,6 @@ export async function CreateProfile(prevState: any, formData: FormData) {
   return redirect('/dashboard');
 }
 
-// UpdateProfile action
 export async function UpdateProfile(prevState: any, formData: FormData) {
   const user = await requireUser();
 
@@ -189,7 +187,6 @@ export async function updateEducation(prevState: any, formData: FormData) {
   const profileId = (await user).id;
   const educationId = formData.get('educationId') as string;
 
-  // Perform the database update with correctly parsed fields
   const data = await prisma.education.update({
     where: {
       profileId,
@@ -198,12 +195,11 @@ export async function updateEducation(prevState: any, formData: FormData) {
     data: {
       institution: submission.value.institution,
       degree: submission.value.degree,
-      startDate: submission.value.startYear, // corrected
-      endDate: submission.value.endYear, // corrected
+      startDate: submission.value.startYear,
+      endDate: submission.value.endYear,
     },
   });
 
-  // Redirect after successful update
   return redirect(`/dashboard`);
 }
 
@@ -245,22 +241,11 @@ export async function UpdateCompany(prevState: any, formData: FormData) {}
 export async function CreateJobAlert(prevState: any, formData: FormData) {
   const { getUser } = getKindeServerSession();
   const user = getUser();
-
-  // Log formData before parsing to check its structure
-  console.log(
-    'Form Data before parsing:',
-    Object.fromEntries(formData.entries())
-  );
-
   const submission = parseWithZod(formData, { schema: jobAlertSchema });
 
-  // Log the submission result
-  console.log('Submission Data:', submission);
 
-  // If validation failed, log the specific errors
   if (submission.status !== 'success') {
-    console.log('Validation Errors:', submission.errors);
-    return submission.reply(); // Return the error response
+    return submission.reply(); 
   }
 
   const profile = await prisma.profile.findUnique({
@@ -283,6 +268,18 @@ export async function CreateJobAlert(prevState: any, formData: FormData) {
       level: submission.value.level,
       salary: submission.value.salary,
       companyId: (await user).id,
+    },
+  });
+
+  return redirect('/dashboard/company');
+}
+
+export async function deleteJobAlert(formData: FormData) {
+  const user = requireUser();
+
+  const data = await prisma.jobAlert.delete({
+    where: {
+      id: formData.get('jobAlertId') as string,
     },
   });
 
