@@ -6,7 +6,7 @@ interface Params {
   companyId: string;
 }
 
-async function getData(companyId: string) {
+export async function getCompanyId(companyId: string) {
   const data = await prisma.company.findUnique({
     where: {
       id: companyId,
@@ -25,7 +25,7 @@ async function getData(companyId: string) {
 
 const EditCompanyPage = async ({ params }: { params: Params }) => {
   const { companyId } = await params;
-  const companyData = await getData(companyId);
+  const companyData = await getCompanyId(companyId);
 
   return (
     <>
