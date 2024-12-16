@@ -1,8 +1,12 @@
+'use client';
+
 import React from 'react';
 import Navbar from '../LandingPageNavbar';
-import { Button } from '@/components/ui/button';
+
 import Image from 'next/image';
 import ProfilePicture from '@/app/images/Profile-picture-created-with-ai.jpeg';
+
+import GetStarted from '../GetStarted';
 
 const Hero = () => {
   return (
@@ -17,14 +21,10 @@ const Hero = () => {
             Connect with top candidates who can take your company to the next
             level.
           </p>
-          <Button className="px-8 py-3 bg-blue-600 text-white font-semibold rounded-md">
-            Get Started
-          </Button>
+          <GetStarted />
         </div>
 
-        {/* Image Card Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8 max-w-5xl mx-auto items-end py-10">
-          {/* Left Side Card (Taller) */}
           <div className="flex flex-col items-center bg-slate-300 p-4 rounded-lg shadow-md h-full">
             <h3 className="text-slate-600 text-center font-semibold mb-2">
               James Samerton
@@ -40,8 +40,6 @@ const Hero = () => {
               className="object-cover w-full h-3/4 shadow-2xl rounded-lg mt-5"
             />
           </div>
-
-          {/* Middle Card 1 (Shorter with top padding) */}
           <div className="flex flex-col items-center bg-slate-200 p-4 rounded-lg shadow-md h-full">
             <h3 className="text-slate-600 text-center font-semibold mb-2">
               James Samerton
@@ -58,7 +56,6 @@ const Hero = () => {
             />
           </div>
 
-          {/* Middle Card 2 (Shorter with top padding) */}
           <div className="flex flex-col items-center bg-slate-200 p-4 rounded-lg shadow-md h-full">
             <h3 className="text-slate-600 text-center font-semibold mb-2">
               James Samerton
@@ -75,7 +72,6 @@ const Hero = () => {
             />
           </div>
 
-          {/* Right Side Card (Taller) */}
           <div className="flex flex-col items-center bg-slate-300 p-4 rounded-lg shadow-md h-full">
             <h3 className="text-slate-600 text-center font-semibold mb-2">
               James Samerton
