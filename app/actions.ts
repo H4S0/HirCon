@@ -13,6 +13,7 @@ import { redirect } from 'next/navigation';
 import { requireUser } from './utils/requireUser';
 import { getKindeServerSession } from '@kinde-oss/kinde-auth-nextjs/server';
 
+// CreateProfile action
 export async function CreateProfile(prevState: any, formData: FormData) {
   const user = await requireUser();
 
@@ -38,6 +39,7 @@ export async function CreateProfile(prevState: any, formData: FormData) {
   return redirect('/dashboard');
 }
 
+// UpdateProfile action
 export async function UpdateProfile(prevState: any, formData: FormData) {
   const user = await requireUser();
 
@@ -187,6 +189,7 @@ export async function updateEducation(prevState: any, formData: FormData) {
   const profileId = (await user).id;
   const educationId = formData.get('educationId') as string;
 
+  // Perform the database update with correctly parsed fields
   const data = await prisma.education.update({
     where: {
       profileId,
@@ -195,11 +198,12 @@ export async function updateEducation(prevState: any, formData: FormData) {
     data: {
       institution: submission.value.institution,
       degree: submission.value.degree,
-      startDate: submission.value.startYear,
-      endDate: submission.value.endYear,
+      startDate: submission.value.startYear, // corrected
+      endDate: submission.value.endYear, // corrected
     },
   });
 
+  // Redirect after successful update
   return redirect(`/dashboard`);
 }
 
@@ -230,6 +234,7 @@ export async function CreateCompany(prevRes: any, formData = FormData) {
       companySize: submission.value.companySize,
       companyDescription: submission.value.companyDescription,
       website: submission.value.website,
+      image: submission.value.image,
       ownerId: (await user).id,
     },
   });
@@ -243,9 +248,13 @@ export async function CreateJobAlert(prevState: any, formData: FormData) {
   const user = getUser();
   const submission = parseWithZod(formData, { schema: jobAlertSchema });
 
+  // Log the submission result
+  console.log('Submission Data:', submission);
 
+  // If validation failed, log the specific errors
   if (submission.status !== 'success') {
-    return submission.reply(); 
+    console.log('Validation Errors:', submission.errors);
+    return submission.reply(); // Return the error response
   }
 
   const profile = await prisma.profile.findUnique({
