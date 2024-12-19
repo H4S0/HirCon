@@ -18,6 +18,7 @@ export async function getCompanyId(companyId: string) {
       location: true,
       website: true,
       industry: true,
+      image: true,
     },
   });
   return data;
