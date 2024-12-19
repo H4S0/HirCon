@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useActionState } from 'react';
+import React, { useActionState, useState } from 'react';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
@@ -9,8 +9,11 @@ import { useForm } from '@conform-to/react';
 import { CreateCompany } from '@/app/actions';
 import { parseWithZod } from '@conform-to/zod';
 import { companySchema } from '@/app/utils/zodSchemas';
+import { UploadDropzone } from '@/app/utils/UploadthingComponents';
+import Image from 'next/image';
 
 const CompanyForm = () => {
+  const [imageUrl, setImageUrl] = useState<undefined | string>(undefined);
   const [lastResult, action] = useActionState(CreateCompany, undefined);
   const [form, fields] = useForm({
     lastResult,
@@ -32,7 +35,7 @@ const CompanyForm = () => {
         onSubmit={form.onSubmit}
         action={action}
       >
-        {/* Company Name */}
+
         <div className="grid gap-3">
           <Label htmlFor="companyName">Company Name</Label>
           <Input
@@ -45,7 +48,6 @@ const CompanyForm = () => {
           />
         </div>
 
-        {/* Industry */}
         <div className="grid gap-2">
           <Label htmlFor="industry">Industry</Label>
           <Input
@@ -58,7 +60,6 @@ const CompanyForm = () => {
           />
         </div>
 
-        {/* Location */}
         <div className="grid gap-2">
           <Label htmlFor="location">Location</Label>
           <Input
@@ -71,14 +72,13 @@ const CompanyForm = () => {
           />
         </div>
 
-        {/* Company Size */}
         <div className="grid gap-2">
           <Label htmlFor="companySize">Company Size</Label>
           <Input
             type="number"
             key={fields.companySize.key}
             name={fields.companySize.name}
-            defaultValue={fields.companySite.initialValue}
+            defaultValue={fields.companySize.initialValue}
             placeholder="Number of employees"
             min="1"
           />
@@ -96,7 +96,6 @@ const CompanyForm = () => {
           />
         </div>
 
-        {/* Description */}
         <div className="grid gap-2">
           <Label htmlFor="description">Description</Label>
           <Textarea
@@ -108,7 +107,35 @@ const CompanyForm = () => {
           />
         </div>
 
-        {/* Submit Button */}
+        <div className="grid gap-2">
+          <Label>Cover Image</Label>
+          <input
+            type="hidden"
+            name={fields.coverImage.name}
+            key={fields.coverImage.key}
+            defaultValue={fields.coverImage.initialValue}
+            value={imageUrl}
+          />
+          {imageUrl ? (
+            <Image
+              src={imageUrl}
+              alt="Uploaded Image"
+              className="object-cover w-[200px] h-[200px] rounded-lg"
+              width={200}
+              height={200}
+            />
+          ) : (
+            <UploadDropzone
+              onClientUploadComplete={(res) => {
+                setImageUrl(res[0].url);
+              }}
+              endpoint="imageUploader"
+            />
+          )}
+
+          <p className="text-red-500 text-sm">{fields.coverImage.errors}</p>
+        </div>
+
         <div className="pt-4">
           <Button type="submit" className="w-full">
             Create Company
