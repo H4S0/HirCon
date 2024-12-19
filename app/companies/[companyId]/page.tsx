@@ -18,9 +18,9 @@ const Page = async ({ params }: { params: Params }) => {
       <header className="mt-10 flex flex-col md:flex-row items-center md:items-start text-center md:text-left">
         {/* Company Logo */}
         <div className="w-32 h-32 md:w-40 md:h-40 flex-shrink-0 overflow-hidden rounded-full bg-gray-100 flex items-center justify-center">
-          {companyData.logo ? (
+          {companyData.image ? (
             <img
-              src={companyData.logo}
+              src={companyData?.image}
               alt={`${companyData.companyName} Logo`}
               className="w-full h-full object-cover"
             />
