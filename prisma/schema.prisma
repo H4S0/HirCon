@@ -32,6 +32,7 @@ model Company {
   companyDescription String
   location           String
   website            String
+  image              String?
   jobAlerts          JobAlert[] // One-to-many relation with JobAlert3
   ownerId            String // Foreign key to the User model, marked as ObjectId
   owner              User       @relation(name: "UserCompanies", fields: [ownerId], references: [id])
