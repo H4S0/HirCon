@@ -51,6 +51,7 @@ export const companySchema = z.object({
   companySize: z.number().min(1),
   companyDescription: z.string().min(1).max(500),
   website: z.string(),
+  coverImage: z.string().min(1),
 });
 
 export const jobAlertSchema = z.object({
