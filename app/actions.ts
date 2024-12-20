@@ -234,7 +234,7 @@ export async function CreateCompany(prevRes: any, formData = FormData) {
       companySize: submission.value.companySize,
       companyDescription: submission.value.companyDescription,
       website: submission.value.website,
-      image: submission.value.image,
+      image: submission.value.coverImage,
       ownerId: (await user).id,
     },
   });
