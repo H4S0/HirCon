@@ -6,8 +6,9 @@ import DashboardNavbar from '@/app/components/DashboardNavbar';
 import { Button } from '@/components/ui/button';
 import JobCreating from '@/app/components/forms/JobCreating';
 import JobAlert from '@/app/components/JobAlert';
+import Image from 'next/image';
 
-interface CompanyProps {
+export interface CompanyProps {
   id: string;
   companyName: string;
   industry: string;
@@ -15,6 +16,7 @@ interface CompanyProps {
   companyDescription: string;
   companySize: number;
   website: string;
+  image: string;
 }
 
 export interface JobAlertProps {
@@ -86,9 +88,22 @@ const CompanyPage = () => {
               {' '}
               {/* Moved key to the top-level element */}
               <div className="flex items-center space-x-6">
-                <div className="w-24 h-24 bg-gray-200 rounded-full flex-shrink-0 flex items-center justify-center text-gray-500">
-                  <span className="text-sm">Logo</span>
+                <div className="w-24 h-24 bg-gray-200 rounded-full flex-shrink-0 flex items-center justify-center overflow-hidden">
+                  {company.image ? (
+                    <Image
+                      src={company.image}
+                      width={96}
+                      height={96}
+                      alt="company-logo"
+                      className="object-cover rounded-full"
+                    />
+                  ) : (
+                    <span className="text-gray-500 text-sm font-semibold">
+                      Company Logo
+                    </span>
+                  )}
                 </div>
+
                 <div className="flex-1">
                   <h1 className="text-2xl font-bold">{company.companyName}</h1>
                   <p className="text-gray-500">{company.industry}</p>
