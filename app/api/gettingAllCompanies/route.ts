@@ -10,6 +10,7 @@ export async function GET(request: Request) {
       companySize: true,
       companyDescription: true,
       website: true,
+      image: true,
       id: true,
     },
   });
