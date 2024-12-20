@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { JobAlertProps } from '../dashboard/company/[companyId]/page';
+import { JobAlertProps } from '../dashboard/company/page';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import { deleteJobAlert } from '../actions';
@@ -80,17 +80,17 @@ const JobCard = ({
 
       <div className="mt-auto">
         {isCompanyDashboard ? (
-          <div className="grid gap-2">
+          <div className="flex flex-col gap-2 ">
             <Link href={`/dashboard/company/job/${item.id}`}>
               <Button className="w-full">Edit your job alert</Button>
             </Link>
             <form action={deleteJobAlert} method="delete">
               <input type="hidden" name="jobAlertId" value={item.id} />
-              <Button>Delete your job alert</Button>
+              <Button className="w-full">Delete your job alert</Button>
             </form>
           </div>
         ) : (
-          <Link href={`/apply/job/${item.id}`}>
+          <Link href={`/job/${item.id}`}>
             <Button className="w-full">Apply to Job</Button>
           </Link>
         )}
