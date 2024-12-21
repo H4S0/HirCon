@@ -27,16 +27,18 @@ const CompanyForm = () => {
   });
 
   return (
-    <div className="max-w-md mx-auto mt-10 p-6 bg-white rounded-lg shadow-md">
-      <h2 className="text-2xl font-semibold mb-4">Create New Company</h2>
+    <div className="max-w-7xl mx-auto  p-6 bg-white rounded-lg shadow-md">
+      <h2 className="text-3xl font-semibold mb-5 text-center">
+        Create New Company
+      </h2>
       <form
-        className="space-y-4"
+        className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"
         id={form.id}
         onSubmit={form.onSubmit}
         action={action}
       >
-
-        <div className="grid gap-3">
+        {/* Company Name */}
+        <div className="flex flex-col">
           <Label htmlFor="companyName">Company Name</Label>
           <Input
             type="text"
@@ -48,7 +50,8 @@ const CompanyForm = () => {
           />
         </div>
 
-        <div className="grid gap-2">
+        {/* Industry */}
+        <div className="flex flex-col">
           <Label htmlFor="industry">Industry</Label>
           <Input
             type="text"
@@ -60,7 +63,8 @@ const CompanyForm = () => {
           />
         </div>
 
-        <div className="grid gap-2">
+        {/* Location */}
+        <div className="flex flex-col">
           <Label htmlFor="location">Location</Label>
           <Input
             type="text"
@@ -72,7 +76,8 @@ const CompanyForm = () => {
           />
         </div>
 
-        <div className="grid gap-2">
+        {/* Company Size */}
+        <div className="flex flex-col">
           <Label htmlFor="companySize">Company Size</Label>
           <Input
             type="number"
@@ -84,19 +89,20 @@ const CompanyForm = () => {
           />
         </div>
 
-        <div className="grid gap-2">
-          <Label htmlFor="companySize">Website</Label>
+        {/* Website */}
+        <div className="flex flex-col">
+          <Label htmlFor="website">Website</Label>
           <Input
             type="text"
             key={fields.website.key}
             name={fields.website.name}
             defaultValue={fields.website.initialValue}
-            placeholder="Number of employees"
-            min="1"
+            placeholder="Website URL"
           />
         </div>
 
-        <div className="grid gap-2">
+        {/* Description */}
+        <div className="col-span-1 sm:col-span-2 lg:col-span-3 flex flex-col">
           <Label htmlFor="description">Description</Label>
           <Textarea
             key={fields.companyDescription.key}
@@ -107,7 +113,8 @@ const CompanyForm = () => {
           />
         </div>
 
-        <div className="grid gap-2">
+        {/* Cover Image */}
+        <div className="col-span-1 sm:col-span-2 lg:col-span-3 flex flex-col">
           <Label>Cover Image</Label>
           <input
             type="hidden"
@@ -132,11 +139,11 @@ const CompanyForm = () => {
               endpoint="imageUploader"
             />
           )}
-
           <p className="text-red-500 text-sm">{fields.coverImage.errors}</p>
         </div>
 
-        <div className="pt-4">
+        {/* Submit Button */}
+        <div className="col-span-1 sm:col-span-2 lg:col-span-3">
           <Button type="submit" className="w-full">
             Create Company
           </Button>
