@@ -246,6 +246,7 @@ export async function UpdateCompany(prevState: any, formData: FormData) {}
 export async function CreateJobAlert(prevState: any, formData: FormData) {
   const { getUser } = getKindeServerSession();
   const user = getUser();
+
   const submission = parseWithZod(formData, { schema: jobAlertSchema });
 
   // Log the submission result
@@ -257,6 +258,7 @@ export async function CreateJobAlert(prevState: any, formData: FormData) {
     return submission.reply(); // Return the error response
   }
 
+  // Get the user profile
   const profile = await prisma.profile.findUnique({
     where: {
       userId: (await user).id,
@@ -267,6 +269,19 @@ export async function CreateJobAlert(prevState: any, formData: FormData) {
     return redirect('/dashboard/profileediting');
   }
 
+  // Find the company associated with the user
+  const company = await prisma.company.findFirst({
+    where: {
+      ownerId: (await user).id, // Assuming ownerId matches the user's ID
+    },
+  });
+
+  if (!company) {
+    console.error('No company found for this user.');
+    return redirect('/dashboard/profileediting'); // Redirect if no company exists
+  }
+
+  // Create the JobAlert with the correct companyId
   const data = await prisma.jobAlert.create({
     data: {
       jobTitle: submission.value.jobTitle,
@@ -276,7 +291,7 @@ export async function CreateJobAlert(prevState: any, formData: FormData) {
       jobType: submission.value.jobType,
       level: submission.value.level,
       salary: submission.value.salary,
-      companyId: (await user).id,
+      companyId: company.id, // Use the correct companyId
     },
   });
 
