@@ -5,9 +5,15 @@ import { NextResponse } from 'next/server';
 export async function GET(request: Request) {
   const user = requireUser();
 
+  const company = await prisma.company.findFirst({
+    where: {
+      ownerId: (await user).id,
+    },
+  });
+
   const data = await prisma.jobAlert.findMany({
     where: {
-      companyId: (await user).id,
+      companyId: company?.id,
     },
     select: {
       jobTitle: true,
