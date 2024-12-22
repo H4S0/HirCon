@@ -37,7 +37,6 @@ const CompanyForm = () => {
         onSubmit={form.onSubmit}
         action={action}
       >
-        {/* Company Name */}
         <div className="flex flex-col">
           <Label htmlFor="companyName">Company Name</Label>
           <Input
@@ -50,7 +49,6 @@ const CompanyForm = () => {
           />
         </div>
 
-        {/* Industry */}
         <div className="flex flex-col">
           <Label htmlFor="industry">Industry</Label>
           <Input
@@ -63,7 +61,6 @@ const CompanyForm = () => {
           />
         </div>
 
-        {/* Location */}
         <div className="flex flex-col">
           <Label htmlFor="location">Location</Label>
           <Input
@@ -76,7 +73,6 @@ const CompanyForm = () => {
           />
         </div>
 
-        {/* Company Size */}
         <div className="flex flex-col">
           <Label htmlFor="companySize">Company Size</Label>
           <Input
@@ -89,7 +85,6 @@ const CompanyForm = () => {
           />
         </div>
 
-        {/* Website */}
         <div className="flex flex-col">
           <Label htmlFor="website">Website</Label>
           <Input
@@ -101,7 +96,6 @@ const CompanyForm = () => {
           />
         </div>
 
-        {/* Description */}
         <div className="col-span-1 sm:col-span-2 lg:col-span-3 flex flex-col">
           <Label htmlFor="description">Description</Label>
           <Textarea
@@ -113,7 +107,6 @@ const CompanyForm = () => {
           />
         </div>
 
-        {/* Cover Image */}
         <div className="col-span-1 sm:col-span-2 lg:col-span-3 flex flex-col">
           <Label>Cover Image</Label>
           <input
@@ -142,7 +135,6 @@ const CompanyForm = () => {
           <p className="text-red-500 text-sm">{fields.coverImage.errors}</p>
         </div>
 
-        {/* Submit Button */}
         <div className="col-span-1 sm:col-span-2 lg:col-span-3">
           <Button type="submit" className="w-full">
             Create Company
