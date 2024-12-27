@@ -3,6 +3,7 @@
 import { parseWithZod } from '@conform-to/zod';
 import prisma from './utils/db';
 import {
+  applicationSchema,
   companySchema,
   educationSchema,
   experienceSchema,
@@ -308,4 +309,69 @@ export async function deleteJobAlert(formData: FormData) {
   });
 
   return redirect('/dashboard/company');
+}
+
+export async function CreateApplication(prevState: any, formData: FormData) {
+  const user = await requireUser();
+
+  const submission = parseWithZod(formData, { schema: applicationSchema });
+
+  if (submission.status !== 'success') {
+    return {
+      status: 'error',
+      message: 'Validation failed',
+      errors: submission.errors,
+    };
+  }
+
+  const company = await prisma.company.findFirst({
+    where: {
+      ownerId: user.id,
+    },
+  });
+
+  if (!company) {
+    return {
+      status: 'error',
+      message: 'No company found for the logged-in user.',
+    };
+  }
+
+  const jobAlert = await prisma.jobAlert.findFirst({
+    where: {
+      companyId: company.id,
+    },
+  });
+
+  if (!jobAlert) {
+    return {
+      status: 'error',
+      message: 'No job alert found for the company.',
+    };
+  }
+
+  const existingApplication = await prisma.application.findUnique({
+    where: {
+      jobId_userId: {
+        jobId: jobAlert.id,
+        userId: user.id,
+      },
+    },
+  });
+
+  if (existingApplication) {
+    console.log('u have already applied');
+  }
+
+  await prisma.application.create({
+    data: {
+      fullName: submission.value.fullName,
+      email: submission.value.email,
+      coverLetter: submission.value.coverLetter,
+      jobId: jobAlert.id,
+      userId: user.id,
+    },
+  });
+
+  return redirect('/');
 }
