@@ -21,7 +21,8 @@ model User {
   profile   Profile?  @relation(name: "UserProfile")
   companies Company[] @relation(name: "UserCompanies")
 
-  createdAt DateTime @default(now())
+  createdAt   DateTime      @default(now())
+  Application Application[]
 }
 
 model Company {
@@ -61,10 +62,16 @@ model Application {
   fullName    String
   email       String
   coverLetter String
-  jobId       String @db.ObjectId
+  jobId       String
+  userId      String
 
-  job       JobAlert @relation(fields: [jobId], references: [id])
+  job  JobAlert @relation(fields: [jobId], references: [id])
+  user User     @relation(fields: [userId], references: [id]) // Reference to the user who applied
+
   createdAt DateTime @default(now())
+
+  // Composite unique constraint to prevent duplicate applications
+  @@unique([jobId, userId])
 }
 
 model Profile {
