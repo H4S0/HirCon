@@ -1,8 +1,11 @@
-import React, { useState } from 'react';
+'use client';
+
+import React, { useEffect, useState } from 'react';
 import { JobAlertProps } from '../dashboard/company/page';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import { deleteJobAlert } from '../actions';
+import { JobApplyingModal } from '../job/[jobId]/page';
 
 const JobAlert = ({
   data,
@@ -12,7 +15,7 @@ const JobAlert = ({
   currentRoute: string;
 }) => {
   return (
-    <div className="p-4 min-h-screen">
+    <div className="p-4 ">
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
         {data.map((item) => (
           <JobCard key={item.id} item={item} currentRoute={currentRoute} />
@@ -30,6 +33,10 @@ const JobCard = ({
   currentRoute: string;
 }) => {
   const [expanded, setExpanded] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const openModal = () => setIsModalOpen(true);
+  const closeModal = () => setIsModalOpen(false);
   const isCompanyDashboard = currentRoute === '/dashboard/company';
 
   return (
@@ -90,9 +97,14 @@ const JobCard = ({
             </form>
           </div>
         ) : (
-          <Link href={`/job/${item.id}`}>
-            <Button className="w-full">Apply to Job</Button>
-          </Link>
+          <>
+            <>
+              <Button className="w-full" onClick={openModal}>
+                Apply to Job
+              </Button>
+              <JobApplyingModal isOpen={isModalOpen} onClose={closeModal} />
+            </>
+          </>
         )}
       </div>
     </div>
