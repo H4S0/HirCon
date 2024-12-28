@@ -13,8 +13,9 @@ import {
 import { redirect } from 'next/navigation';
 import { requireUser } from './utils/requireUser';
 import { getKindeServerSession } from '@kinde-oss/kinde-auth-nextjs/server';
+import { SubmissionResult } from '@conform-to/react';
 
-// CreateProfile action
+
 export async function CreateProfile(prevState: any, formData: FormData) {
   const user = await requireUser();
 
@@ -40,7 +41,7 @@ export async function CreateProfile(prevState: any, formData: FormData) {
   return redirect('/dashboard');
 }
 
-// UpdateProfile action
+
 export async function UpdateProfile(prevState: any, formData: FormData) {
   const user = await requireUser();
 
@@ -190,7 +191,6 @@ export async function updateEducation(prevState: any, formData: FormData) {
   const profileId = (await user).id;
   const educationId = formData.get('educationId') as string;
 
-  // Perform the database update with correctly parsed fields
   const data = await prisma.education.update({
     where: {
       profileId,
@@ -199,12 +199,12 @@ export async function updateEducation(prevState: any, formData: FormData) {
     data: {
       institution: submission.value.institution,
       degree: submission.value.degree,
-      startDate: submission.value.startYear, // corrected
-      endDate: submission.value.endYear, // corrected
+      startDate: submission.value.startYear, 
+      endDate: submission.value.endYear, 
     },
   });
 
-  // Redirect after successful update
+
   return redirect(`/dashboard`);
 }
 
@@ -250,16 +250,14 @@ export async function CreateJobAlert(prevState: any, formData: FormData) {
 
   const submission = parseWithZod(formData, { schema: jobAlertSchema });
 
-  // Log the submission result
-  console.log('Submission Data:', submission);
 
-  // If validation failed, log the specific errors
+
   if (submission.status !== 'success') {
     console.log('Validation Errors:', submission.errors);
-    return submission.reply(); // Return the error response
+    return submission.reply();
   }
 
-  // Get the user profile
+  
   const profile = await prisma.profile.findUnique({
     where: {
       userId: (await user).id,
@@ -270,19 +268,18 @@ export async function CreateJobAlert(prevState: any, formData: FormData) {
     return redirect('/dashboard/profileediting');
   }
 
-  // Find the company associated with the user
+ 
   const company = await prisma.company.findFirst({
     where: {
-      ownerId: (await user).id, // Assuming ownerId matches the user's ID
+      ownerId: (await user).id, 
     },
   });
 
   if (!company) {
     console.error('No company found for this user.');
-    return redirect('/dashboard/profileediting'); // Redirect if no company exists
+    return redirect('/dashboard/profileediting'); 
   }
 
-  // Create the JobAlert with the correct companyId
   const data = await prisma.jobAlert.create({
     data: {
       jobTitle: submission.value.jobTitle,
@@ -292,7 +289,7 @@ export async function CreateJobAlert(prevState: any, formData: FormData) {
       jobType: submission.value.jobType,
       level: submission.value.level,
       salary: submission.value.salary,
-      companyId: company.id, // Use the correct companyId
+      companyId: company.id, 
     },
   });
 
@@ -311,67 +308,61 @@ export async function deleteJobAlert(formData: FormData) {
   return redirect('/dashboard/company');
 }
 
-export async function CreateApplication(prevState: any, formData: FormData) {
+type CreateApplicationResponse =
+  | {
+      status: string;
+      message: string;
+    }
+  | SubmissionResult<string[]>;
+
+export async function CreateApplication(
+  prevState: any,
+  formData: FormData
+): Promise<CreateApplicationResponse> {
   const user = await requireUser();
 
   const submission = parseWithZod(formData, { schema: applicationSchema });
 
   if (submission.status !== 'success') {
-    return {
-      status: 'error',
-      message: 'Validation failed',
-      errors: submission.errors,
-    };
+    return submission;
   }
 
-  const company = await prisma.company.findFirst({
-    where: {
-      ownerId: user.id,
-    },
-  });
+  const { fullName, email, coverLetter, jobId } = submission.value;
 
-  if (!company) {
-    return {
-      status: 'error',
-      message: 'No company found for the logged-in user.',
-    };
-  }
-
-  const jobAlert = await prisma.jobAlert.findFirst({
-    where: {
-      companyId: company.id,
-    },
+  const jobAlert = await prisma.jobAlert.findUnique({
+    where: { id: jobId },
   });
 
   if (!jobAlert) {
-    return {
-      status: 'error',
-      message: 'No job alert found for the company.',
-    };
+    return { status: 'error', message: 'Job alert not found.' };
   }
 
   const existingApplication = await prisma.application.findUnique({
     where: {
       jobId_userId: {
-        jobId: jobAlert.id,
+        jobId,
         userId: user.id,
       },
     },
   });
 
   if (existingApplication) {
-    console.log('u have already applied');
+    return { status: 'error', message: 'You have already applied' }; 
   }
 
-  await prisma.application.create({
+  const newApplication = await prisma.application.create({
     data: {
-      fullName: submission.value.fullName,
-      email: submission.value.email,
-      coverLetter: submission.value.coverLetter,
-      jobId: jobAlert.id,
+      fullName,
+      email,
+      coverLetter,
+      jobId,
       userId: user.id,
     },
   });
 
-  return redirect('/');
+  if (newApplication) {
+    return { status: 'success', message: 'Application submitted successfully' };
+  } else {
+    return { status: 'error', message: 'Something went wrong while applying' };
+  }
 }
