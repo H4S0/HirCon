@@ -66,6 +66,7 @@ export const jobAlertSchema = z.object({
 
 export const applicationSchema = z.object({
   fullName: z.string().min(1).max(30),
-  email: z.string().email(),
+  email: z.string(),
   coverLetter: z.string().min(1).max(750),
+  jobId: z.string(),
 });
