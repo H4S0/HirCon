@@ -1,11 +1,18 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { JobAlertProps } from '../dashboard/company/page';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import { deleteJobAlert } from '../actions';
 import JobApplyingModal from './JobApplyingModal';
+import CheckingApplication from './CheckingApplication';
+
+export interface applicationProps {
+  fullName: string;
+  email: string;
+  coverLetter: string;
+}
 
 const JobAlert = ({
   data,
@@ -14,11 +21,27 @@ const JobAlert = ({
   data: JobAlertProps[];
   currentRoute: string;
 }) => {
+  const [application, setApplication] = useState<applicationProps[]>([]);
+
+  useEffect(() => {
+    async function fetchData() {
+      const response = await fetch('/api/gettingApplication');
+      const result = await response.json();
+      setApplication(result);
+    }
+    fetchData();
+  }, []);
+
   return (
     <div className="p-4 ">
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
         {data.map((item) => (
-          <JobCard key={item.id} item={item} currentRoute={currentRoute} />
+          <JobCard
+            key={item.id}
+            item={item}
+            currentRoute={currentRoute}
+            applicationItem={application}
+          />
         ))}
       </div>
     </div>
@@ -28,15 +51,21 @@ const JobAlert = ({
 const JobCard = ({
   item,
   currentRoute,
+  applicationItem,
 }: {
+  applicationItem: applicationProps[];
   item: JobAlertProps;
   currentRoute: string;
 }) => {
   const [expanded, setExpanded] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
-
+  const [checkingModal, setCheckingModal] = useState(false);
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
+
+  const openCheckModal = () => setCheckingModal(true);
+  const closeCheckModal = () => setCheckingModal(false);
+
   const isCompanyDashboard = currentRoute === '/dashboard/company';
 
   return (
@@ -95,6 +124,12 @@ const JobCard = ({
               <input type="hidden" name="jobAlertId" value={item.id} />
               <Button className="w-full">Delete your job alert</Button>
             </form>
+            <Button onClick={openCheckModal}>View application</Button>
+            <CheckingApplication
+              isOpen={checkingModal}
+              onClose={closeCheckModal}
+              applicationData={applicationItem}
+            />
           </div>
         ) : (
           <>
