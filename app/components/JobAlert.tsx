@@ -1,11 +1,11 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { JobAlertProps } from '../dashboard/company/page';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import { deleteJobAlert } from '../actions';
-import { JobApplyingModal } from '../job/[jobId]/page';
+import JobApplyingModal from './JobApplyingModal';
 
 const JobAlert = ({
   data,
@@ -102,7 +102,11 @@ const JobCard = ({
               <Button className="w-full" onClick={openModal}>
                 Apply to Job
               </Button>
-              <JobApplyingModal isOpen={isModalOpen} onClose={closeModal} />
+              <JobApplyingModal
+                isOpen={isModalOpen}
+                onClose={closeModal}
+                jobId={item.id}
+              />
             </>
           </>
         )}
