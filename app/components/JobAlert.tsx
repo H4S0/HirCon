@@ -117,9 +117,6 @@ const JobCard = ({
       <div className="mt-auto">
         {isCompanyDashboard ? (
           <div className="flex flex-col gap-2 ">
-            <Link href={`/dashboard/company/job/${item.id}`}>
-              <Button className="w-full">Edit your job alert</Button>
-            </Link>
             <form action={deleteJobAlert} method="delete">
               <input type="hidden" name="jobAlertId" value={item.id} />
               <Button className="w-full">Delete your job alert</Button>
