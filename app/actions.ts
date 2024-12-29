@@ -15,7 +15,6 @@ import { requireUser } from './utils/requireUser';
 import { getKindeServerSession } from '@kinde-oss/kinde-auth-nextjs/server';
 import { SubmissionResult } from '@conform-to/react';
 
-
 export async function CreateProfile(prevState: any, formData: FormData) {
   const user = await requireUser();
 
@@ -40,7 +39,6 @@ export async function CreateProfile(prevState: any, formData: FormData) {
 
   return redirect('/dashboard');
 }
-
 
 export async function UpdateProfile(prevState: any, formData: FormData) {
   const user = await requireUser();
@@ -92,7 +90,7 @@ export async function CreateEducation(prevState: any, formData: FormData) {
 
   const profile = await prisma.profile.findUnique({
     where: {
-      userId: user.id,
+      userId: (await user).id,
     },
   });
 
@@ -106,11 +104,11 @@ export async function CreateEducation(prevState: any, formData: FormData) {
       degree: submission.value.degree,
       startDate: submission.value.startYear,
       endDate: submission.value.endYear,
-      profileId: profile.id,
+      profileId: (await user).id,
     },
   });
 
-  return redirect('/dashboard/profileediting');
+  return redirect('/dashboard');
 }
 
 export async function CreateExperience(prevState: any, formData: FormData) {
@@ -144,7 +142,7 @@ export async function CreateExperience(prevState: any, formData: FormData) {
       profileId: profile.id,
     },
   });
-  return redirect('/dashboard/profileediting');
+  return redirect('/dashboard');
 }
 
 export async function updateExperience(prevState: any, formData: FormData) {
@@ -155,7 +153,7 @@ export async function updateExperience(prevState: any, formData: FormData) {
     return submission.reply();
   }
 
-  const profileId = user.id;
+  const profileId = (await user).id;
   const experienceId = formData.get('experienceId') as string;
 
   const data = await prisma.experience.update({
@@ -176,12 +174,8 @@ export async function updateExperience(prevState: any, formData: FormData) {
 }
 
 export async function updateEducation(prevState: any, formData: FormData) {
-  const { getUser } = getKindeServerSession();
-  const user = getUser();
+  const user = requireUser();
 
-  if (!user) {
-    return redirect('/api/auth/login');
-  }
   const submission = parseWithZod(formData, { schema: educationSchema });
 
   if (submission.status !== 'success') {
@@ -199,16 +193,15 @@ export async function updateEducation(prevState: any, formData: FormData) {
     data: {
       institution: submission.value.institution,
       degree: submission.value.degree,
-      startDate: submission.value.startYear, 
-      endDate: submission.value.endYear, 
+      startDate: submission.value.startYear,
+      endDate: submission.value.endYear,
     },
   });
-
 
   return redirect(`/dashboard`);
 }
 
-export async function CreateCompany(prevRes: any, formData = FormData) {
+export async function CreateCompany(prevState: any, formData = FormData) {
   const user = requireUser();
 
   const submission = parseWithZod(formData, { schema: companySchema });
@@ -242,7 +235,35 @@ export async function CreateCompany(prevRes: any, formData = FormData) {
   return redirect('/dashboard/company');
 }
 
-export async function UpdateCompany(prevState: any, formData: FormData) {}
+export async function UpdateCompany(prevState: any, formData: FormData) {
+  const user = requireUser();
+  const submission = parseWithZod(formData, {schema : companySchema})
+
+  if(submission.status !== 'success') {
+    return submission.reply();
+  }
+
+  const companyId = formData.get('companyId') as string;
+
+  const companyUpdate = await prisma.company.update({
+    where:{
+      ownerId: (await user).id,
+      id: companyId,
+    },
+    data:{
+      companyName: submission.value.companyName,
+      companySize: submission.value.companySize,
+      website: submission.value.website,
+      location: submission.value.location,
+      companyDescription: submission.value.companyDescription,
+      industry: submission.value.industry,
+      image: submission.value.coverImage,
+      ownerId: (await user).id,
+    }
+  })
+
+  return redirect(`/dashboard`);
+}
 
 export async function CreateJobAlert(prevState: any, formData: FormData) {
   const { getUser } = getKindeServerSession();
@@ -250,14 +271,11 @@ export async function CreateJobAlert(prevState: any, formData: FormData) {
 
   const submission = parseWithZod(formData, { schema: jobAlertSchema });
 
-
-
   if (submission.status !== 'success') {
     console.log('Validation Errors:', submission.errors);
     return submission.reply();
   }
 
-  
   const profile = await prisma.profile.findUnique({
     where: {
       userId: (await user).id,
@@ -268,16 +286,15 @@ export async function CreateJobAlert(prevState: any, formData: FormData) {
     return redirect('/dashboard/profileediting');
   }
 
- 
   const company = await prisma.company.findFirst({
     where: {
-      ownerId: (await user).id, 
+      ownerId: (await user).id,
     },
   });
 
   if (!company) {
     console.error('No company found for this user.');
-    return redirect('/dashboard/profileediting'); 
+    return redirect('/dashboard/profileediting');
   }
 
   const data = await prisma.jobAlert.create({
@@ -289,7 +306,7 @@ export async function CreateJobAlert(prevState: any, formData: FormData) {
       jobType: submission.value.jobType,
       level: submission.value.level,
       salary: submission.value.salary,
-      companyId: company.id, 
+      companyId: company.id,
     },
   });
 
@@ -347,7 +364,7 @@ export async function CreateApplication(
   });
 
   if (existingApplication) {
-    return { status: 'error', message: 'You have already applied' }; 
+    return { status: 'error', message: 'You have already applied' };
   }
 
   const newApplication = await prisma.application.create({
