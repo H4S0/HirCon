@@ -13,13 +13,18 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useForm } from '@conform-to/react';
 import { parseWithZod } from '@conform-to/zod';
-import React, { useState } from 'react';
+import React, { useActionState, useState } from 'react';
+import { Textarea } from '@/components/ui/textarea';
+import Image from 'next/image';
+import { UploadDropzone } from '@/app/utils/UploadthingComponents';
 
 interface companyDataProps {
   companyName: string;
   location: string;
   industry: string;
   website: string;
+  companyDescription: string;
+  imageUrl: string;
 }
 
 const CompanyForm = ({
@@ -29,12 +34,17 @@ const CompanyForm = ({
   data: companyDataProps;
   companyId: string;
 }) => {
-  const [name, setName] = useState(data.companyName);
+  const [companyName, setCompanyName] = useState(data.companyName);
   const [location, setLocation] = useState(data.location);
   const [industry, setIndustry] = useState(data.industry);
   const [website, setWebsite] = useState(data.website);
-
+  const [imageUrl, setImageUrl] = useState<undefined | string>(data.imageUrl);
+  const [companyDescription, setCompanyDescription] = useState(
+    data.companyDescription
+  );
+  const [lastResult, action] = useActionState(UpdateCompany, undefined);
   const [form, fields] = useForm({
+    lastResult,
     onValidate({ formData }) {
       return parseWithZod(formData, { schema: companySchema });
     },
@@ -46,7 +56,7 @@ const CompanyForm = ({
     e.preventDefault();
 
     const formData = new FormData(e.currentTarget);
-    await UpdateCompany(companyId, formData); // Update the company with form data
+    const result = await UpdateCompany(undefined, formData);
   };
 
   return (
@@ -58,22 +68,18 @@ const CompanyForm = ({
         <CardContent>
           {data ? (
             <form id={form.id} onSubmit={handleSubmit}>
-              <input type="hidden" name="companyId" value={companyId} />
-
-              {/* Company Name */}
               <div className="mb-4">
                 <Label htmlFor="name">Company Name:</Label>
                 <Input
-                  id={fields.name.name}
-                  name={fields.name.name}
-                  defaultValue={name}
+                  id={fields.companyName.name}
+                  name={fields.companyName.name}
+                  defaultValue={companyName}
                   required
                   className="mt-1"
-                  onChange={(e) => setName(e.target.value)}
+                  onChange={(e) => setCompanyName(e.target.value)}
                 />
               </div>
 
-              {/* Location */}
               <div className="mb-4">
                 <Label htmlFor="location">Location:</Label>
                 <Input
@@ -86,7 +92,6 @@ const CompanyForm = ({
                 />
               </div>
 
-              {/* Industry */}
               <div className="mb-4">
                 <Label htmlFor="industry">Industry:</Label>
                 <Input
@@ -95,11 +100,10 @@ const CompanyForm = ({
                   defaultValue={industry}
                   required
                   className="mt-1"
-                  onChange={(value) => setIndustry(value)}
+                  onChange={(e) => setIndustry(e.target.value)}
                 ></Input>
               </div>
 
-              {/* Website */}
               <div className="mb-4">
                 <Label htmlFor="website">Website:</Label>
                 <Input
@@ -112,7 +116,50 @@ const CompanyForm = ({
                 />
               </div>
 
+              <div className="mb-4">
+                <Label htmlFor="companyDescription">Company description</Label>
+                <Textarea
+                  id={fields.companyDescription.name}
+                  name={fields.companyDescription.name}
+                  defaultValue={companyDescription}
+                  required
+                  className="mt-1"
+                  onChange={(e) => setCompanyDescription(e.target.value)}
+                />
+              </div>
+
+              <div className="col-span-1 sm:col-span-2 lg:col-span-3 flex flex-col">
+                <Label>Cover Image</Label>
+                <input
+                  type="hidden"
+                  name={fields.coverImage.name}
+                  key={fields.coverImage.key}
+                  defaultValue={fields.coverImage.initialValue}
+                  value={imageUrl}
+                />
+                {imageUrl ? (
+                  <Image
+                    src={imageUrl}
+                    alt="Uploaded Image"
+                    className="object-cover w-[200px] h-[200px] rounded-lg"
+                    width={200}
+                    height={200}
+                  />
+                ) : (
+                  <UploadDropzone
+                    onClientUploadComplete={(res) => {
+                      setImageUrl(res[0].url);
+                    }}
+                    endpoint="imageUploader"
+                  />
+                )}
+                <p className="text-red-500 text-sm">
+                  {fields.coverImage.errors}
+                </p>
+              </div>
+
               <CardFooter>
+                <input type="hidden" name="companyId" value={companyId} />
                 <Button type="submit" className="w-full">
                   Save Changes
                 </Button>
