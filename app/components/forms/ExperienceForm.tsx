@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useActionState, useState } from 'react';
-import { updateExperience } from '@/app/actions';
+import { DeleteExperience, updateExperience } from '@/app/actions';
 import { experienceSchema } from '@/app/utils/zodSchemas';
 import { Button } from '@/components/ui/button';
 import {
@@ -56,7 +56,6 @@ const ExperienceForm = ({
         <form id={form.id} onSubmit={form.onSubmit} action={action}>
           <input type="hidden" name="experienceId" value={experienceId} />
 
-          {/* Company/Institution */}
           <div className="mb-4">
             <Label htmlFor="company">Company/Institution:</Label>
             <Input
@@ -68,7 +67,6 @@ const ExperienceForm = ({
             />
           </div>
 
-          {/* Role */}
           <div className="mb-4">
             <Label htmlFor="role">Role:</Label>
             <Input
@@ -80,7 +78,6 @@ const ExperienceForm = ({
             />
           </div>
 
-          {/* Role Description */}
           <div className="mb-4">
             <Label htmlFor="roleDescription">Role Description:</Label>
             <Textarea
@@ -93,7 +90,6 @@ const ExperienceForm = ({
             />
           </div>
 
-          {/* Start Date */}
           <div className="mb-4">
             <Label htmlFor="startDate">Start Date:</Label>
             <Input
@@ -106,7 +102,6 @@ const ExperienceForm = ({
             />
           </div>
 
-          {/* End Date */}
           <div className="mb-4">
             <Label htmlFor="endDate">End Date:</Label>
             <Input
@@ -120,9 +115,22 @@ const ExperienceForm = ({
           </div>
 
           <CardFooter>
-            <Button type="submit" className="w-full">
-              Save
-            </Button>
+            <div className="grid gap-2 mt-5 w-full">
+              <Button type="submit" className="w-full">
+                Save
+              </Button>
+              <Button
+                variant="outline"
+                onClick={async () => {
+                  const formData = new FormData();
+
+                  formData.append('experienceId', experienceId);
+                  await DeleteExperience(undefined, formData);
+                }}
+              >
+                Delete education
+              </Button>
+            </div>
           </CardFooter>
         </form>
       </CardContent>
