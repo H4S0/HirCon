@@ -54,7 +54,7 @@ model JobAlert {
   company        Company @relation(fields: [companyId], references: [id])
 
   createdAt   DateTime      @default(now())
-  Application Application[]
+  Application Application[] // No `onDelete` here
 }
 
 model Application {
@@ -65,7 +65,7 @@ model Application {
   jobId       String
   userId      String
 
-  job  JobAlert @relation(fields: [jobId], references: [id])
+  job  JobAlert @relation(fields: [jobId], references: [id], onDelete: Cascade) // Define cascading delete here
   user User     @relation(fields: [userId], references: [id]) // Reference to the user who applied
 
   createdAt DateTime @default(now())
