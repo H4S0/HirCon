@@ -236,21 +236,27 @@ export async function CreateCompany(prevState: any, formData = FormData) {
 }
 
 export async function UpdateCompany(prevState: any, formData: FormData) {
-  const user = requireUser();
-  const submission = parseWithZod(formData, {schema : companySchema})
+  const user = await requireUser();
+  if (!user || !user.id) {
+    throw new Error('User not authenticated');
+  }
 
-  if(submission.status !== 'success') {
+  const submission = parseWithZod(formData, { schema: companySchema });
+
+  if (submission.status !== 'success') {
+    console.error('Validation error:', submission.error);
     return submission.reply();
   }
 
   const companyId = formData.get('companyId') as string;
 
+  if (!companyId) {
+    throw new Error('Invalid companyId');
+  }
+
   const companyUpdate = await prisma.company.update({
-    where:{
-      ownerId: (await user).id,
-      id: companyId,
-    },
-    data:{
+    where: { id: companyId },
+    data: {
       companyName: submission.value.companyName,
       companySize: submission.value.companySize,
       website: submission.value.website,
@@ -258,16 +264,15 @@ export async function UpdateCompany(prevState: any, formData: FormData) {
       companyDescription: submission.value.companyDescription,
       industry: submission.value.industry,
       image: submission.value.coverImage,
-      ownerId: (await user).id,
-    }
-  })
+      ownerId: user.id,
+    },
+  });
 
-  return redirect(`/dashboard`);
+  return redirect('/dashboard/company');
 }
 
 export async function CreateJobAlert(prevState: any, formData: FormData) {
-  const { getUser } = getKindeServerSession();
-  const user = getUser();
+  const user = await requireUser();
 
   const submission = parseWithZod(formData, { schema: jobAlertSchema });
 
@@ -278,7 +283,7 @@ export async function CreateJobAlert(prevState: any, formData: FormData) {
 
   const profile = await prisma.profile.findUnique({
     where: {
-      userId: (await user).id,
+      userId: user.id,
     },
   });
 
@@ -288,7 +293,7 @@ export async function CreateJobAlert(prevState: any, formData: FormData) {
 
   const company = await prisma.company.findFirst({
     where: {
-      ownerId: (await user).id,
+      ownerId: user.id,
     },
   });
 
