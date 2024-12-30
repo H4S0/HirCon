@@ -107,7 +107,7 @@ model Experience {
   endDate         String // End date of the experience
   roleDescription String
   profile         Profile @relation(fields: [profileId], references: [id], onDelete: Cascade)
-  profileId       String  @db.ObjectId // Foreign key to the Profile model
+  profileId       String
 }
 
 enum Degree {
