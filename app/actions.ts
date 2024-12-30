@@ -319,11 +319,17 @@ export async function CreateJobAlert(prevState: any, formData: FormData) {
 }
 
 export async function deleteJobAlert(formData: FormData) {
-  const user = requireUser();
+  const user = await requireUser();
 
-  const data = await prisma.jobAlert.delete({
+  const jobid = formData.get('jobAlertId') as string;
+
+  if (!jobid) {
+    throw new Error('Job Alert ID is required.');
+  }
+
+  const deletedJobAlert = await prisma.jobAlert.delete({
     where: {
-      id: formData.get('jobAlertId') as string,
+      id: jobid,
     },
   });
 
