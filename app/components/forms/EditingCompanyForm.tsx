@@ -25,6 +25,7 @@ interface companyDataProps {
   website: string;
   companyDescription: string;
   imageUrl: string;
+  companySize: number;
 }
 
 const CompanyForm = ({
@@ -38,7 +39,9 @@ const CompanyForm = ({
   const [location, setLocation] = useState(data.location);
   const [industry, setIndustry] = useState(data.industry);
   const [website, setWebsite] = useState(data.website);
-  const [imageUrl, setImageUrl] = useState<undefined | string>(data.imageUrl);
+  const [imageUrl, setImageUrl] = useState<string>(data.imageUrl || '');
+  const [companySize, setCompanySize] = useState(data.companySize);
+
   const [companyDescription, setCompanyDescription] = useState(
     data.companyDescription
   );
@@ -73,7 +76,7 @@ const CompanyForm = ({
                 <Input
                   id={fields.companyName.name}
                   name={fields.companyName.name}
-                  defaultValue={companyName}
+                  value={companyName}
                   required
                   className="mt-1"
                   onChange={(e) => setCompanyName(e.target.value)}
@@ -85,10 +88,23 @@ const CompanyForm = ({
                 <Input
                   id={fields.location.name}
                   name={fields.location.name}
-                  defaultValue={location}
+                  value={location}
                   required
                   className="mt-1"
                   onChange={(e) => setLocation(e.target.value)}
+                />
+              </div>
+
+              <div className="flex flex-col">
+                <Label htmlFor="companySize">Company Size</Label>
+                <Input
+                  type="number"
+                  key={fields.companySize.key}
+                  name={fields.companySize.name}
+                  defaultValue={companySize}
+                  placeholder="Number of employees"
+                  required
+                  onChange={(e) => setCompanySize(e.target.value)}
                 />
               </div>
 
