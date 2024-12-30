@@ -139,7 +139,7 @@ export async function CreateExperience(prevState: any, formData: FormData) {
       startDate: submission.value.startYear,
       endDate: submission.value.endYear,
       roleDescription: submission.value.roleDescription,
-      profileId: profile.id,
+      profileId: (await user).id,
     },
   });
   return redirect('/dashboard');
@@ -170,7 +170,19 @@ export async function updateExperience(prevState: any, formData: FormData) {
     },
   });
 
-  return redirect(`/dashboard/experience/${experienceId}`);
+  return redirect(`/dashboard`);
+}
+
+export async function DeleteExperience(prevState: any, formData: FormData) {
+  const experienceId = formData.get('experienceId') as string;
+
+  const data = await prisma.experience.delete({
+    where: {
+      id: experienceId,
+    },
+  });
+
+  return redirect('/dashboard');
 }
 
 export async function updateEducation(prevState: any, formData: FormData) {
@@ -202,8 +214,6 @@ export async function updateEducation(prevState: any, formData: FormData) {
 }
 
 export async function DeleteEducation(prevState: any, formData: FormData) {
-  const user = requireUser();
-
   const educationId = formData.get('educationId') as string;
 
   const data = await prisma.education.delete({
