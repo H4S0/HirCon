@@ -155,7 +155,16 @@ const ProfilePage = async () => {
                     </div>
                   ))
                 ) : (
-                  <p>No experience</p>
+                  <p className="text-gray-500">
+                    No experience records found. Go to your profile to add
+                    education.
+                    <Link
+                      href={'/dashboard/profileediting'}
+                      className="font-semibold underline ml-3"
+                    >
+                      Profile
+                    </Link>
+                  </p>
                 )}
               </div>
 
