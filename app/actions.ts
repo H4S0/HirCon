@@ -201,7 +201,21 @@ export async function updateEducation(prevState: any, formData: FormData) {
   return redirect(`/dashboard`);
 }
 
-export async function CreateCompany(prevState: any, formData = FormData) {
+export async function DeleteEducation(prevState: any, formData: FormData) {
+  const user = requireUser();
+
+  const educationId = formData.get('educationId') as string;
+
+  const data = await prisma.education.delete({
+    where: {
+      id: educationId,
+    },
+  });
+
+  return redirect('/dashboard');
+}
+
+export async function CreateCompany(prevState: any, formData: FormData) {
   const user = requireUser();
 
   const submission = parseWithZod(formData, { schema: companySchema });
