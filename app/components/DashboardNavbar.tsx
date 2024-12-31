@@ -60,7 +60,7 @@ const DashboardNavbar = () => {
         </div>
         <div className="hidden md:flex gap-5">
           {isLoading ? (
-            <p className="font-bold">loading...</p>
+            <div className="loader"></div> // Add spinner while loading
           ) : isAuthenticated ? (
             <div className="grid grid-cols-2 items-center">
               <p className="font-semibold">{user?.given_name}</p>
