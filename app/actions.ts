@@ -12,7 +12,6 @@ import {
 } from './utils/zodSchemas';
 import { redirect } from 'next/navigation';
 import { requireUser } from './utils/requireUser';
-import { getKindeServerSession } from '@kinde-oss/kinde-auth-nextjs/server';
 import { SubmissionResult } from '@conform-to/react';
 
 export async function CreateProfile(prevState: any, formData: FormData) {
@@ -98,7 +97,7 @@ export async function CreateEducation(prevState: any, formData: FormData) {
     return redirect('/dashboard/profileediting');
   }
 
-  const education = await prisma.education.create({
+  await prisma.education.create({
     data: {
       institution: submission.value.institution,
       degree: submission.value.degree,
@@ -132,7 +131,7 @@ export async function CreateExperience(prevState: any, formData: FormData) {
     return redirect('/dashboard/profileediting');
   }
 
-  const experience = await prisma.experience.create({
+  await prisma.experience.create({
     data: {
       company: submission.value.company,
       role: submission.value.role,
@@ -156,7 +155,7 @@ export async function updateExperience(prevState: any, formData: FormData) {
   const profileId = (await user).id;
   const experienceId = formData.get('experienceId') as string;
 
-  const data = await prisma.experience.update({
+  await prisma.experience.update({
     where: {
       profileId,
       id: experienceId,
@@ -176,7 +175,7 @@ export async function updateExperience(prevState: any, formData: FormData) {
 export async function DeleteExperience(prevState: any, formData: FormData) {
   const experienceId = formData.get('experienceId') as string;
 
-  const data = await prisma.experience.delete({
+  await prisma.experience.delete({
     where: {
       id: experienceId,
     },
@@ -197,7 +196,7 @@ export async function updateEducation(prevState: any, formData: FormData) {
   const profileId = (await user).id;
   const educationId = formData.get('educationId') as string;
 
-  const data = await prisma.education.update({
+  await prisma.education.update({
     where: {
       profileId,
       id: educationId,
@@ -216,7 +215,7 @@ export async function updateEducation(prevState: any, formData: FormData) {
 export async function DeleteEducation(prevState: any, formData: FormData) {
   const educationId = formData.get('educationId') as string;
 
-  const data = await prisma.education.delete({
+  await prisma.education.delete({
     where: {
       id: educationId,
     },
@@ -244,7 +243,7 @@ export async function CreateCompany(prevState: any, formData: FormData) {
     return redirect('/dashboard/profileediting');
   }
 
-  const data = await prisma.company.create({
+  await prisma.company.create({
     data: {
       companyName: submission.value.companyName,
       industry: submission.value.industry,
@@ -278,7 +277,7 @@ export async function UpdateCompany(prevState: any, formData: FormData) {
     throw new Error('Invalid companyId');
   }
 
-  const companyUpdate = await prisma.company.update({
+  await prisma.company.update({
     where: { id: companyId },
     data: {
       companyName: submission.value.companyName,
@@ -301,7 +300,6 @@ export async function CreateJobAlert(prevState: any, formData: FormData) {
   const submission = parseWithZod(formData, { schema: jobAlertSchema });
 
   if (submission.status !== 'success') {
-    console.log('Validation Errors:', submission.errors);
     return submission.reply();
   }
 
@@ -326,7 +324,7 @@ export async function CreateJobAlert(prevState: any, formData: FormData) {
     return redirect('/dashboard/profileediting');
   }
 
-  const data = await prisma.jobAlert.create({
+  await prisma.jobAlert.create({
     data: {
       jobTitle: submission.value.jobTitle,
       jobDescription: submission.value.jobDescription,
@@ -343,15 +341,13 @@ export async function CreateJobAlert(prevState: any, formData: FormData) {
 }
 
 export async function deleteJobAlert(formData: FormData) {
-  const user = await requireUser();
-
   const jobid = formData.get('jobAlertId') as string;
 
   if (!jobid) {
     throw new Error('Job Alert ID is required.');
   }
 
-  const deletedJobAlert = await prisma.jobAlert.delete({
+  await prisma.jobAlert.delete({
     where: {
       id: jobid,
     },
@@ -376,7 +372,7 @@ export async function CreateApplication(
   const submission = parseWithZod(formData, { schema: applicationSchema });
 
   if (submission.status !== 'success') {
-    return submission;
+    return submission.reply();
   }
 
   const { fullName, email, coverLetter, jobId } = submission.value;
