@@ -114,20 +114,22 @@ const ProfilePage = async () => {
                 <h3 className="text-lg font-medium text-gray-700 mb-2">
                   Skills
                 </h3>
-                {item.skills.length ? (
-                  item.skills.map((skill) => (
-                    <span
-                      key={skill}
-                      className="inline-block bg-blue-100 text-blue-600 px-2 py-1 rounded-md text-sm mr-2 mb-2"
-                    >
-                      {skill}
-                    </span>
-                  ))
+                {item.skills && item.skills.length > 0 ? (
+                  item.skills[0]
+                    .replace(/[\[\]\\"]/g, '')
+                    .split(',')
+                    .map((skill, index) => (
+                      <React.Fragment key={index}>
+                        <span className="inline-block bg-blue-100 text-blue-600 px-2 py-1 rounded-md text-sm mr-2 mb-2">
+                          {skill.trim()}
+                        </span>
+                        {index < item.skills[0].split(',').length - 1}
+                      </React.Fragment>
+                    ))
                 ) : (
                   <p>Make sure to add some skills on the profile page!</p>
                 )}
               </div>
-
               <div className="w-full bg-gray-100 p-6 rounded-lg shadow-inner mb-6">
                 <h3 className="text-lg font-medium text-gray-700 mb-2">
                   Experience
