@@ -20,6 +20,7 @@ import { useForm } from '@conform-to/react';
 import { parseWithZod } from '@conform-to/zod';
 import { experienceSchema } from '../utils/zodSchemas';
 import { Data } from './EducationModal';
+import { Textarea } from '@/components/ui/textarea';
 
 const ExperienceModal = () => {
   const [data, setData] = useState<Data[]>();
@@ -116,7 +117,7 @@ const ExperienceModal = () => {
                     </div>
                     <div className="grid gap-3">
                       <Label>Short description abour your role</Label>
-                      <Input
+                      <Textarea
                         placeholder="Describe your role"
                         key={fields.roleDescription.key}
                         name={fields.roleDescription.name}
