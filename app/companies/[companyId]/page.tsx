@@ -5,8 +5,8 @@ import prisma from '@/app/utils/db';
 import { getCompanyId } from '@/app/dashboard/company/companyEdit/[companyId]/page';
 import JobAlert from '@/app/components/JobAlert';
 
-interface Params {
-  companyId: string;
+interface Props {
+  params: Promise<{ companyId: string }>;
 }
 
 async function getJobByCompanyId(companyId: string) {
@@ -28,8 +28,9 @@ async function getJobByCompanyId(companyId: string) {
   return data;
 }
 
-const Page = async ({ params }: { params: Params }) => {
-  const { companyId } = await params;
+const Page = async (props: Props) => {
+  const params = await props.params;
+  const { companyId } = params;
   const companyData = await getCompanyId(companyId);
   const jobAlertData = await getJobByCompanyId(companyId);
 
@@ -37,6 +38,7 @@ const Page = async ({ params }: { params: Params }) => {
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-24">
       <Navbar />
 
+      {/* Header Section with Logo, Company Name, and Description */}
       <header className="mt-10 flex flex-col md:flex-row items-center md:items-start text-center md:text-left">
         <div className="w-32 h-32 md:w-40 md:h-40 flex-shrink-0 overflow-hidden rounded-full bg-gray-100 flex items-center justify-center">
           {companyData.image ? (
@@ -63,6 +65,7 @@ const Page = async ({ params }: { params: Params }) => {
         </div>
       </header>
 
+      {/* Company Info Section */}
       <section className="mt-12 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
         <div className="bg-white shadow-md rounded-lg p-6">
           <h2 className="text-xl font-semibold text-gray-800">Company Size</h2>
@@ -107,7 +110,11 @@ const Page = async ({ params }: { params: Params }) => {
         <h2 className="text-2xl font-bold text-gray-800 mb-6">
           Active Job Alerts
         </h2>
-        <JobAlert data={jobAlertData} currentRoute="/" />
+        {jobAlertData.length > 0 ? (
+          <JobAlert data={jobAlertData} currentRoute="/" />
+        ) : (
+          <p>No active job alerts</p>
+        )}
       </section>
 
       <footer className="mt-16 text-center">
