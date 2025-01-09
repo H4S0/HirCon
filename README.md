@@ -1,3 +1,12 @@
+HirCon is a modern job portal application built with Next.js, Prisma, and MongoDB. It empowers users to:
+
+Set up personalized profiles to showcase their skills and experience.
+Create and manage companies for job postings.
+Set up job alerts to stay updated with relevant opportunities.
+Apply for jobs seamlessly with an intuitive user interface.
+This app combines speed, scalability, and user-centric features to streamline the hiring and job search process. 🚀
+
+
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
 ## Getting Started
