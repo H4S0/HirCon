@@ -34,8 +34,8 @@ const Navbar = () => {
           <Link href={'/dashboard'} className="hover:underline">
             Dashboard
           </Link>
-          <Link href={'/profile'} className="hover:underline">
-            Users
+          <Link href={'/activejobs'} className="hover:underline">
+            Jobs
           </Link>
           <Link href={'/companies'} className="hover:underline">
             Companies
