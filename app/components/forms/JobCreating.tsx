@@ -129,7 +129,7 @@ const JobCreating = () => {
                   <div className="flex flex-col gap-4 items-start">
                     <Label>Location</Label>
                     <Input
-                      placeholder="Describe your role"
+                      placeholder="Add your location"
                       key={fields.location.key}
                       name={fields.location.name}
                       defaultValue={fields.location.initialValue}
@@ -143,7 +143,7 @@ const JobCreating = () => {
                         defaultValue={fields.remote.initialValue}
                       >
                         <SelectTrigger className="w-[180px]">
-                          <SelectValue placeholder="Select level" />
+                          <SelectValue placeholder="Remote option" />
                         </SelectTrigger>
                         <SelectContent>
                           <SelectItem value="AVAILABLE">Available</SelectItem>
