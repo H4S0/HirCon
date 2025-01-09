@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 'use server';
 
 import { parseWithZod } from '@conform-to/zod';
@@ -94,7 +95,7 @@ export async function CreateEducation(prevState: any, formData: FormData) {
   });
 
   if (!profile) {
-    return redirect('/dashboard/profileediting');
+    return redirect('/dashboard');
   }
 
   await prisma.education.create({
@@ -128,7 +129,7 @@ export async function CreateExperience(prevState: any, formData: FormData) {
   });
 
   if (!profile) {
-    return redirect('/dashboard/profileediting');
+    return redirect('/dashboard');
   }
 
   await prisma.experience.create({
@@ -337,7 +338,7 @@ export async function CreateJobAlert(prevState: any, formData: FormData) {
     },
   });
 
-  return redirect('/dashboard/company');
+  return redirect('/dashboard');
 }
 
 export async function deleteJobAlert(formData: FormData) {
@@ -353,7 +354,7 @@ export async function deleteJobAlert(formData: FormData) {
     },
   });
 
-  return redirect('/dashboard/company');
+  return redirect('/dashboard');
 }
 
 type CreateApplicationResponse =
