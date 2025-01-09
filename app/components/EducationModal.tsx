@@ -136,6 +136,7 @@ const EducationModal = () => {
                         Starting date
                       </Label>
                       <Input
+                        type="date"
                         key={fields.startYear.key}
                         name={fields.startYear.name}
                         defaultValue={fields.startYear.initialValue}
@@ -146,6 +147,7 @@ const EducationModal = () => {
                     <div className="grid gap-3">
                       <Label htmlFor={fields.endYear.name}>End date</Label>
                       <Input
+                        type="date"
                         key={fields.endYear.key}
                         name={fields.endYear.name}
                         defaultValue={fields.endYear.initialValue}
